@@ -21,9 +21,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GameObjects\Dice\" />
-    <Folder Include="GameObjects\PlayerShips\" />
     <Folder Include="GameObjects\Threats\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>
