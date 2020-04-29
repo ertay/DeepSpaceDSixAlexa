@@ -1,5 +1,6 @@
 ﻿using DeepSpaceDSixAlexa.Enums;
 using DeepSpaceDSixAlexa.GameObjects.Dice;
+using DeepSpaceDSixAlexa.GameObjects.Threats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
     public class Ship
     {
         public virtual int Hull { get; set; }
+        [JsonIgnore]
         public virtual int MaxHull { get; }
-        public virtual int Shield { get; set; }
-        public virtual int MaxShield { get; }
+        public virtual int Shields { get; set; }
+        [JsonIgnore]
+        public virtual int MaxShields { get; }
 
         public List<CrewDie> Crew { get; set; }
         
@@ -34,6 +37,16 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         public Ship()
         {
             Crew = new List<CrewDie>();
+        }
+
+        public void RollCrewDice()
+        {
+
+        }
+
+        public void SendCrewOnMission(CrewType crew, Threat threat)
+        {
+
         }
     }
 }
