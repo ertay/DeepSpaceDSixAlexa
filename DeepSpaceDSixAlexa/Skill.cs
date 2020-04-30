@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DeepSpaceDSixAlexa.Extensions;
 using Alexa.NET.RequestHandlers;
 using DeepSpaceDSixAlexa.Intents;
+using DeepSpaceDSixAlexa.GameObjects;
 
 namespace DeepSpaceDSixAlexa
 {
@@ -35,15 +36,17 @@ namespace DeepSpaceDSixAlexa
 
 
 
-
+            Game game = new Game();
             var pipeline = new AlexaRequestPipeline();
 
             pipeline.RequestHandlers.Add(new LaunchIntentHandler());
             pipeline.RequestHandlers.Add(new SessionEndedRequestHandler());
             pipeline.RequestHandlers.Add(new CancelIntentHandler());
             pipeline.RequestHandlers.Add(new HelpIntentHandler());
+            pipeline.RequestHandlers.Add(new NewGameIntentHandler());
 
-            var response = await pipeline.Process(skillRequest);
+            var response = await pipeline.Process(skillRequest, game);
+         
             return new OkObjectResult(response);
         }
 

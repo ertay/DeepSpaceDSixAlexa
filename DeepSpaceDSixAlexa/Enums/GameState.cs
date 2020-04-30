@@ -7,5 +7,6 @@ namespace DeepSpaceDSixAlexa.Enums
     public enum GameState
     {
         MainMenu,
+        PlayerTurn,
     }
 }

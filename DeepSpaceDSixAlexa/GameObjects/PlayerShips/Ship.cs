@@ -20,6 +20,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         public virtual int Shields { get; set; }
         [JsonIgnore]
         public virtual int MaxShields { get; }
+        [JsonIgnore]
+        public virtual int ScannerSize => 3;
 
         public List<CrewDie> Crew { get; set; }
         
@@ -34,19 +36,62 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         [JsonIgnore]
         public int ScannerCount => Crew.Count(c => c.State == CrewState.Locked);
 
-        public Ship()
+        public virtual void InitializeShip()
         {
+            // initialize the crew
             Crew = new List<CrewDie>();
+            for (int i = 0; i < 6; i++)
+            {
+                Crew.Add(new CrewDie());
+            }
+
         }
 
         public void RollCrewDice()
         {
-
+            Crew.ForEach(c => c.Roll());
+            // check if scanners have 3 threats and notify ThreatManager to draw a new threat
+            while(Crew.Count(c => c.State == CrewState.Locked) >= ScannerSize)
+            {
+                for (int i = 0; i < ScannerSize; i++)
+                {
+                    Crew.First(c => c.State == CrewState.Locked).State = CrewState.Returning;
+                }
+                // TODO: Notify Event Manager to Draw new card.
+            }
+            
         }
 
         public void SendCrewOnMission(CrewType crew, Threat threat)
         {
 
+        }
+
+        public string GetAvailableCrewAsString()
+        {
+            var groups = Crew.Where(c => c.State == CrewState.Available).GroupBy(g => g.Type.ToString()).OrderByDescending(g => g.Count()).Select(g => new { Key = g.Key, Count = g.Count() });
+
+            string message = "";
+            if (groups.Count() == 1)
+            {
+                message = $"{groups.First().Count} {groups.First().Key} crew";
+            }
+            else if (groups.Count() == 2)
+            {
+                message = $"{groups.First().Count} {groups.First().Key}, and {groups.Last().Count} {groups.Last().Key} crew";
+            }
+            else if (groups.Count() > 2)
+            {
+                for (int i = 0; i < groups.Count() - 1; i++)
+                {
+                    var crew = groups.ElementAt(i);
+                    message += $"{crew.Count} {crew.Key}, ";
+                }
+                message += $"and {groups.Last().Count} {groups.Last().Key} crew";
+            }
+            else
+                message = "no available crew";
+                    return message;
         }
     }
 }

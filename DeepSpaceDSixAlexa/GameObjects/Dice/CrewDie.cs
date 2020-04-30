@@ -21,6 +21,9 @@ namespace DeepSpaceDSixAlexa.GameObjects.Dice
                 return;
             int dieValue = ThreadSafeRandom.ThisThreadsRandom.Next(6);
             Type = (CrewType)dieValue;
+            // check if threat was rolled, and lock the die if so
+            if (Type == CrewType.Threat)
+                State = CrewState.Locked;
 
 
         }

@@ -8,6 +8,13 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         public override int MaxHull => 8;
         public override int MaxShields => 4;
 
+        public override void InitializeShip()
+        {
+            base.InitializeShip();
+            Hull = MaxHull;
+            Shields = MaxShields;
+        }
+
         public void FireWeapons(int tacticalCount)
         {
 
@@ -29,6 +36,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         }
 
         public void HealCrew()
+        {
+
+        }
+
+        public void RemoveThreatFromScanner()
         {
 
         }

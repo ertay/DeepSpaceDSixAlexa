@@ -15,6 +15,11 @@ namespace DeepSpaceDSixAlexa.Extensions
             return ResponseBuilder.Ask(speech, reprompt, session);
         }
 
+        public static SkillResponse Ask(string message, string reprompt, Session session)
+        {
+            return Ask(message, RepromptBuilder.Create(reprompt), session);
+        }
+
         public static SkillResponse Ask(string message, Session session)
         {
             return Ask(message, RepromptBuilder.Create(message), session);
