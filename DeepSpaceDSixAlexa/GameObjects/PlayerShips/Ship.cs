@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Enums;
+using DeepSpaceDSixAlexa.Events;
 using DeepSpaceDSixAlexa.GameObjects.Dice;
 using DeepSpaceDSixAlexa.GameObjects.Threats;
 using System;
@@ -36,6 +37,14 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         [JsonIgnore]
         public int ScannerCount => Crew.Count(c => c.State == CrewState.Locked);
 
+        protected EventManager _eventManager;
+
+        public Ship() { }
+        public virtual void InitializeEvents(EventManager eventManager)
+        {
+            _eventManager = eventManager;
+        }
+
         public virtual void InitializeShip()
         {
             // initialize the crew
@@ -51,16 +60,18 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         {
             Crew.ForEach(c => c.Roll());
             // check if scanners have 3 threats and notify ThreatManager to draw a new threat
+            
             while(Crew.Count(c => c.State == CrewState.Locked) >= ScannerSize)
             {
                 for (int i = 0; i < ScannerSize; i++)
                 {
                     Crew.First(c => c.State == CrewState.Locked).State = CrewState.Returning;
                 }
-                // TODO: Notify Event Manager to Draw new card.
+                _eventManager.Trigger("ScannerDrawThreatCard");
             }
-            
         }
+
+        public virtual void EndTurn() { }
 
         public void SendCrewOnMission(CrewType crew, Threat threat)
         {

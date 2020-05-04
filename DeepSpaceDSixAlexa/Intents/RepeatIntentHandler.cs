@@ -8,21 +8,19 @@ using DeepSpaceDSixAlexa.GameObjects;
 
 namespace DeepSpaceDSixAlexa.Intents
 {
-    public class NewGameIntentHandler : SynchronousRequestHandler
+    public class RepeatIntentHandler : SynchronousRequestHandler
     {
         public override bool CanHandle(AlexaRequestInformation<SkillRequest> information)
         {
-            var request = (IntentRequest)information.SkillRequest.Request;
-            return request.Intent.Name == "NewGameIntent";
+            var intentRequest = (IntentRequest)information.SkillRequest.Request;
+            return intentRequest.Intent.Name== BuiltInIntent.Repeat;
         }
 
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
-            var game = (Game) information.Context;
-            
-            game.CreateNewGame();
-            
-            return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);
+            var game = (Game)information.Context;
+
+            return ResponseCreator.Ask(game.RepeatMessage,game.RepromptMessage, information.SkillRequest.Session);
         }
     }
 }

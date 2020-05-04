@@ -11,6 +11,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
     /// </summary>
     public class Threat
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public List<int> ActivationList { get; set; }
         [JsonIgnore]

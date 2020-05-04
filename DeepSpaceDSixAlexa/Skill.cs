@@ -36,14 +36,17 @@ namespace DeepSpaceDSixAlexa
 
 
 
-            Game game = new Game();
+            Game game = new Game(skillRequest.Session);
             var pipeline = new AlexaRequestPipeline();
 
             pipeline.RequestHandlers.Add(new LaunchIntentHandler());
             pipeline.RequestHandlers.Add(new SessionEndedRequestHandler());
             pipeline.RequestHandlers.Add(new CancelIntentHandler());
             pipeline.RequestHandlers.Add(new HelpIntentHandler());
+            pipeline.RequestHandlers.Add(new RepeatIntentHandler());
             pipeline.RequestHandlers.Add(new NewGameIntentHandler());
+            pipeline.RequestHandlers.Add(new FireWeaponsIntentHandler());
+            pipeline.RequestHandlers.Add(new EndTurnIntentHandler());
 
             var response = await pipeline.Process(skillRequest, game);
          

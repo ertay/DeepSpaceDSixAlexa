@@ -1,12 +1,28 @@
-﻿using DeepSpaceDSixAlexa.Helpers;
+﻿using Alexa.NET.Request;
+using DeepSpaceDSixAlexa.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DeepSpaceDSixAlexa.Extensions
 {
     public static class Extensions
     {
+
+        public static string GetSlotId(this Slot slot)
+        {
+            string id;
+            try
+            {
+                id = slot.Resolution.Authorities.First().Values.First().Value.Id;
+            }
+            catch(Exception ex)
+            {
+                id = "-1";
+            }
+            return id;
+        }
         /// <summary>
         /// Shuffle extension for IList lists.
         /// Grabbed from https://stackoverflow.com/a/1262619/3646421
