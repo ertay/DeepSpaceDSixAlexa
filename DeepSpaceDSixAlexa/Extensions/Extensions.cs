@@ -23,6 +23,16 @@ namespace DeepSpaceDSixAlexa.Extensions
             }
             return id;
         }
+
+        public static string FirstCharToUpper(this string input)
+        {
+            switch (input)
+            {
+                case null: throw new ArgumentNullException(nameof(input));
+                case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+                default: return input.First().ToString().ToUpper() + input.Substring(1);
+            }
+        }
         /// <summary>
         /// Shuffle extension for IList lists.
         /// Grabbed from https://stackoverflow.com/a/1262619/3646421

@@ -51,6 +51,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         public void InitializeEventManager()
         {
             _eventManager = new EventManager();
+            _eventManager.On("AppendMessage", (e) => Message += ((DefaultEvent)e).Message);
             _eventManager.On("ScannerDrawThreatCard", (e) => Message += $"Our scanners have detected a new threat: ");
             _eventManager.On("NewThreat", (e) => Message += $"{((DefaultEvent)e).Message}. ");
             _eventManager.On("ThreatDestroyed", (e) => Message += ((DefaultEvent)e).Message);
@@ -79,9 +80,9 @@ namespace DeepSpaceDSixAlexa.GameObjects
 
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";
             Message += Ship.ScannerCount > 0 ? $"Number of threats on our scanners is {Ship.ScannerCount}. What are your orders, captain?": "What are your orders, captain?";
-            //RepeatMessage = Message;
+            RepeatMessage = Message;
             RepromptMessage = $"{ThreatManager.GetThreatsAsString()}. We have {Ship.GetAvailableCrewAsString()}. What are your orders, Captain?";
-            RepeatMessage = RepromptMessage;
+            
             SaveData();
 
         }
@@ -94,6 +95,9 @@ namespace DeepSpaceDSixAlexa.GameObjects
                 Message += "New threat has entered the battle: ";
                 ThreatManager.DrawThreat();
             }
+
+            // reset threats when their turn is over
+            ThreatManager.ResetThreats();
             Message += "Rolling the crew dice. ";
             Ship.RollCrewDice();
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";

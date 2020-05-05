@@ -46,6 +46,12 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new RepeatIntentHandler());
             pipeline.RequestHandlers.Add(new NewGameIntentHandler());
             pipeline.RequestHandlers.Add(new FireWeaponsIntentHandler());
+            pipeline.RequestHandlers.Add(new FireStasisBeamIntentHandler());
+            pipeline.RequestHandlers.Add(new RechargeShieldsIntentHandler());
+            pipeline.RequestHandlers.Add(new RepairHullIntentHandler());
+            pipeline.RequestHandlers.Add(new HealCrewIntentHandler());
+            pipeline.RequestHandlers.Add(new RemoveThreatFromScannerIntentHandler());
+            pipeline.RequestHandlers.Add(new TransformCrewIntentHandler());
             pipeline.RequestHandlers.Add(new EndTurnIntentHandler());
 
             var response = await pipeline.Process(skillRequest, game);

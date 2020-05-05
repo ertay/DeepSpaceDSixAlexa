@@ -62,6 +62,13 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
 
         }
 
+        public void ResetThreats()
+        {
+            // fire this before the player turn starts, used to remove any effects that disappear at the end of enemey's turn
+            ExternalThreats.ForEach(t => t.IsDisabled = false);
+            InternalThreats.ForEach(t => t.IsDisabled = false);
+        }
+
         public string GetThreatsAsString()
         {
             if (ExternalThreats.Count == 1)
