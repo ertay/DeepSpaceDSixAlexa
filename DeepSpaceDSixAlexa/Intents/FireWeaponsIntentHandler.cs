@@ -25,11 +25,9 @@ namespace DeepSpaceDSixAlexa.Intents
             var ship = game.Ship as HalcyonShip;
             if (ship == null)
                 return ResponseCreator.Ask("That is not a valid action. ", game.RepromptMessage, information.SkillRequest.Session);
-            if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Tactical && c.State == CrewState.Available))
-                return ResponseCreator.Ask($"We have no available tactical crew to fire weapons. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
+            if (game.GameState != GameState.FiringWeapons)
+                return ResponseCreator.Ask($"You need to assign tactical crew to the weapons to fire them. Say assign tactical crew to weapons to do that. ", game.RepromptMessage, information.SkillRequest.Session);
 
-            if (game.ThreatManager.ExternalThreats.Count < 1)
-                return ResponseCreator.Ask("There are no external threats to fire upon. ", game.RepromptMessage, information.SkillRequest.Session);
             // check if enemy target is present
             var request = (IntentRequest)information.SkillRequest.Request;
             string threatId = request.Intent.Slots["ExternalThreat"].GetSlotId();
@@ -39,13 +37,34 @@ namespace DeepSpaceDSixAlexa.Intents
                 string threatName = request.Intent.Slots["ExternalThreat"].Value;
                 return ResponseCreator.Ask($"{threatName} is not a valid target. Try firing weapons again and provide one of the following: {game.ThreatManager.GetThreatsAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
             }
-            // we have a valid target, open fire!
-            ship.FireWeapons(threat);
+            // let's check the damage amount 
+            int damage = request.Intent.Slots["DamageAmount"].ExtractNumber();
+            if(damage < 1 || damage > ship.DamagePool)
+                return ResponseCreator.Ask($"Please provide a valid damage amount. You can deal up to {ship.DamagePool} damage. Say fire weapons to try again. ", game.RepromptMessage, information.SkillRequest.Session);
 
-            game.Message += "Awaiting further orders, captain. ";
+            // damage amount is correct, open fire!
+            bool canFireAgain = ship.FireWeapons(threat, damage);
+
+            if(canFireAgain && game.ThreatManager.ExternalThreats.Count > 0)
+            {
+                game.Message += $"We have {ship.DamagePool} more damage to spend. Say fire weapons again and  choose one of the following targets: {game.ThreatManager.GetThreatsAsString()}. ";
+                game.RepeatMessage = game.Message;
+                game.RepromptMessage = $"Our tactical crew is waiting for your orders to open fire. We need to spend {ship.DamagePool} more damage. Say fire weapons and provide one of the following targets: {game.ThreatManager.GetThreatsAsString()}. ";
+                game.SaveData();
+                return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);
+            }
+            // we're either out of damage to spend or  there are no more threats
+            // go back to player turn state
+            game.GameState = GameState.PlayerTurn;
+            if (ship.DamagePool < 1)
+                game.Message += "All weapons fired, captain. Awaiting further orders. ";
+            else if (game.ThreatManager.ExternalThreats.Count < 1)
+                game.Message += "All external threats destroyed! Awaiting further orders, sir. ";
+            ship.DamagePool = 0;
             game.RepeatMessage = game.Message;
-            game.RepromptMessage = "Waiting for further orders, captain. ";
+            game.RepromptMessage = "What are your orders, sir? ";
             game.SaveData();
+            
             return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);
         }
     }

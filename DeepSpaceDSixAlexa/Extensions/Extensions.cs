@@ -24,6 +24,21 @@ namespace DeepSpaceDSixAlexa.Extensions
             return id;
         }
 
+        public static int ExtractNumber(this Slot slot)
+        {
+            int result = -1;
+            try
+            {
+                result = Convert.ToInt16(slot.Value);
+            }
+            catch (Exception ex)
+            {
+                // invalid number
+            }
+
+            return result;
+        }
+
         public static string FirstCharToUpper(this string input)
         {
             switch (input)

@@ -11,6 +11,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
     {
         public override int MaxHull => 8;
         public override int MaxShields => 4;
+        public int DamagePool { get; set; }
         public bool ExtraDamage { get; set; }
         public bool ExtraRepair { get; set; }
 
@@ -24,21 +25,44 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             Shields = MaxShields;
         }
 
-        public void FireWeapons(ExternalThreat threat)
+        public void AssignTacticalToWeapons(int tacticalCount)
         {
-            // if we have already fired once, subsequent actions deal two damage instaed of one
-            int damage = ExtraDamage ? 2 : 1;
+
+            int count = 0;
+            foreach (var item in Crew)
+            {
+                // skip if it is not tactical and not available
+                if (item.State != CrewState.Available && item.Type != CrewType.Tactical)
+                    continue;
+                // we have an available tactical unit, assign it
+                item.State = CrewState.Returning;
+                count++;
+                // stop if we reached the required number of units t o assign
+                if (count >= tacticalCount)
+                    break;
+            }int baseDamage = ExtraDamage ? 2 : 1;
+            DamagePool = baseDamage + (tacticalCount - 1) * 2;
             ExtraDamage = true;
-            threat.Health -= damage;
+            string message = $"{ tacticalCount} tactical crew assigned to the weapon systems. We can deal up to {DamagePool} damage. Say fire weapons to open fire! ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+            
+        }
+
+        public bool FireWeapons(ExternalThreat threat, int damageAmount)
+        {
+            // fire weapons at target and  return false if damage pool reaches zero
+            // if we have already fired once, subsequent actions deal two damage instaed of one
+            DamagePool -= damageAmount;
+            threat.Health -= damageAmount;
             threat.Health = Math.Max(0, threat.Health);
             if (threat.Health <= 0)
             {
-                _eventManager.Trigger("ThreatDestroyed", new DefaultEvent() { Message = $"Our tactical crew dealt {damage} damage and destroyed the {threat.Name}. " });
+                _eventManager.Trigger("ThreatDestroyed", new DefaultEvent() { Message = $"Our tactical crew dealt {damageAmount} damage and destroyed {threat.Name}. " });
             }
             else
-                _eventManager.Trigger("AttackThreat", new DefaultEvent() { Message = $"Our tactical crew opened fire at {threat.Name} and dealt {damage} damage. {threat.Name} now has {threat.Health} health. "});
-            // mark tactical crew as returning
-            Crew.First(c => c.Type == CrewType.Tactical && c.State == CrewState.Available).State = CrewState.Returning;
+                _eventManager.Trigger("AttackThreat", new DefaultEvent() { Message = $"Our tactical crew opened fire at {threat.Name} and dealt {damageAmount} damage. {threat.Name} now has {threat.Health} health. "});
+            // return true if we still have damage pool to spend
+            return DamagePool > 0;
 
 
         }
@@ -110,6 +134,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 
         public override void EndTurn()
         {
+            DamagePool = 0;
             ExtraDamage = false;
             ExtraRepair = false;
         }
