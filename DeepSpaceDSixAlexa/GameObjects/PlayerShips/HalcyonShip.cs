@@ -32,7 +32,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             foreach (var item in Crew)
             {
                 // skip if it is not tactical and not available
-                if (item.State != CrewState.Available && item.Type != CrewType.Tactical)
+                if (item.State != CrewState.Available || item.Type != CrewType.Tactical)
                     continue;
                 // we have an available tactical unit, assign it
                 item.State = CrewState.Returning;
@@ -105,16 +105,16 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
                 // if crew is in infirmary, put it in the returning state, otherwise keep the state that it is in if it wasn't in infirmary
                 item.State = item.State == CrewState.Infirmary ? CrewState.Returning : item.State;
             }
-            Crew.First(c => c.Type == CrewType.Medic && c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"A medic healed {infirmaryCount} crew member{plural} that will be available next round. ";
+            Crew.First(c => c.Type == CrewType.Medical && c.State == CrewState.Available).State = CrewState.Returning;
+            string message = $"Our medical crew healed {infirmaryCount} crew member{plural} that will be available next round. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
         public void RemoveThreatFromScanner()
         {
             Crew.First(c => c.Type == CrewType.Threat && c.State == CrewState.Locked).State = CrewState.Returning;
-            Crew.First(c => c.Type == CrewType.Medic&& c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"A medic was used to remove a threat die from our scanners. The number of locked threats on our scanners is {ScannerCount}. ";
+            Crew.First(c => c.Type == CrewType.Medical&& c.State == CrewState.Available).State = CrewState.Returning;
+            string message = $"Medical crew was used to remove a threat die from our scanners. The number of locked threats on our scanners is {ScannerCount}. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 

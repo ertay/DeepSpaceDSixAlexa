@@ -36,7 +36,7 @@ namespace DeepSpaceDSixAlexa.Intents
             string sourceCrewName = request.Intent.Slots["SourceCrew"].Value;
             bool isSourceValid = Enum.TryParse(sourceCrewName.FirstCharToUpper(), out CrewType sourceCrew);
             if(!isSourceValid)
-                return ResponseCreator.Ask($"{sourceCrewName} is not a valid crew type. Try the transform crew command again and provide one of the following  types: Tactical, Medic, Engineering, Science, or Commander. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"{sourceCrewName} is not a valid crew type. Try the transform crew command again and provide one of the following  types: Tactical, Medical, Engineering, Science, or Commander. ", game.RepromptMessage, information.SkillRequest.Session);
             
             // check if source is commander, and there is no second commander to transform
             if(sourceCrew == CrewType.Commander && ship.Crew.Count(c => c.Type == CrewType.Commander && c.State == CrewState.Available) < 2)
@@ -50,7 +50,7 @@ namespace DeepSpaceDSixAlexa.Intents
             string targetCrewName = request.Intent.Slots["TargetCrew"].Value;
             bool isTargetValid = Enum.TryParse(targetCrewName.FirstCharToUpper(), out CrewType targetCrew);
             if (!isTargetValid)
-                return ResponseCreator.Ask($"{targetCrewName} is not a valid crew type to transform to. Try the transform crew command again and provide one of the following  types: Tactical, Medic, Engineering, Science, or Commander. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"{targetCrewName} is not a valid crew type to transform to. Try the transform crew command again and provide one of the following  types: Tactical, Medical, Engineering, Science, or Commander. ", game.RepromptMessage, information.SkillRequest.Session);
 
             // finally let's check if source is equal to target
             if (sourceCrew == targetCrew)

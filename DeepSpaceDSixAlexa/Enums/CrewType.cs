@@ -4,7 +4,7 @@
     {
         Commander,
         Tactical,
-        Medic,
+        Medical,
         Science,
         Engineering,
         Threat

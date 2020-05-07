@@ -25,8 +25,8 @@ namespace DeepSpaceDSixAlexa.Intents
             var ship = game.Ship as HalcyonShip;
             if (ship == null)
                 return ResponseCreator.Ask("You cannot heal the crew in this ship. ", game.RepromptMessage, information.SkillRequest.Session);
-            if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Medic&& c.State == CrewState.Available))
-                return ResponseCreator.Ask($"We have no available medic crew to heal our units in the infirmary. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
+            if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Medical&& c.State == CrewState.Available))
+                return ResponseCreator.Ask($"We have no available medical crew to heal our units in the infirmary. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
             // TODO: Prevent healing if medic crew cannot be used
             if (ship.InfirmaryCrewCount< 1)
                 return ResponseCreator.Ask("There are no crew members in the infirmary. Use this command when someone ends up in the infirmary. ", game.RepromptMessage, information.SkillRequest.Session);
