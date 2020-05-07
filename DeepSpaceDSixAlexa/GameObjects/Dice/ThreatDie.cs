@@ -13,7 +13,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Dice
 
         public void Roll()
         {
-            Value = ThreadSafeRandom.ThisThreadsRandom.Next(6);
+            Value = ThreadSafeRandom.ThisThreadsRandom.Next(6) + 1;
         }
     }
 }

@@ -95,7 +95,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
                 Message += "New threat has entered the battle: ";
                 ThreatManager.DrawThreat();
             }
-
+            ThreatManager.ActivateThreats();
             // reset threats when their turn is over
             ThreatManager.ResetThreats();
             Message += "Rolling the crew dice. ";

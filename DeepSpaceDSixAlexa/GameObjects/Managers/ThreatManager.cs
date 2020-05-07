@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.GameObjects.Dice;
 using DeepSpaceDSixAlexa.GameObjects.Threats;
 using DeepSpaceDSixAlexa.Helpers;
 using System;
@@ -60,6 +61,30 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             _eventManager.Trigger("NewThreat", new DefaultEvent() { Message = threat.Name});
             return threat;
 
+        }
+
+        public void ActivateThreats()
+        {
+            if (InternalThreats.Count < 1 && ExternalThreats.Count < 1)
+                return;
+            // TODO: Activate internal threats first
+
+            ThreatDie threatDie = new ThreatDie();
+            string message = $"Rolling the threat die... The result is {threatDie.Value}. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+            
+            var threatsToActivate = ExternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).OrderByDescending(t => t.Health).ToList();
+            if (threatsToActivate.Count < 1)
+            {
+                message = "No threats were activated this round. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+            }
+
+                foreach (var item in threatsToActivate)
+            {
+                item.Activate(_eventManager);
+            }
+            
         }
 
         public void ResetThreats()

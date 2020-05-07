@@ -43,6 +43,36 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         public virtual void InitializeEvents(EventManager eventManager)
         {
             _eventManager = eventManager;
+
+            _eventManager.On("DamageShip", (e) => ProcessDamage((DamageShipEvent)e));
+        }
+
+        public void ProcessDamage(DamageShipEvent e)
+        {
+            if(e.IgnoreShields || Shields == 0)
+            {
+                Hull -= e.Damage;
+                Hull = Math.Max(0, Hull);
+                string msg = $"{e.ThreatName} opened fire and caused {e.Damage} hull damage. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(msg));
+                return;
+            }
+            string message = "";
+
+            
+            Shields -= e.Damage;
+            if (Shields < 0)
+            {
+                Hull -= Math.Abs(Shields);
+                Hull = Math.Max(0, Hull);
+                message = $"{e.ThreatName} opened fire that destroyed our shields and caused {Math.Abs(Shields)} hull damage. ";
+                Shields = 0;
+            }
+            else
+                message = $"{e.ThreatName} opened fire and caused {e.Damage} damage to our shields. ";
+
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+
         }
 
         public virtual void InitializeShip()

@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Enums;
+using DeepSpaceDSixAlexa.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,7 +29,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         /// <summary>
         /// This method should fire when the threat die rolls the number that is on the activation list.
         /// </summary>
-        public virtual void Activate(int threatDieValue)
+        public virtual void Activate(EventManager eventManager)
         {
 
         }
