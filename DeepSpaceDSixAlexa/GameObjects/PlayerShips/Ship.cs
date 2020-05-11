@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 {
@@ -46,6 +47,39 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 
             _eventManager.On("DamageShip", (e) => ProcessDamage((DamageShipEvent)e));
             _eventManager.On("BoardingShipMissionComplete", (e) => ProcessBoardingShipMission((DefaultEvent)e));
+            _eventManager.On("BomberAttack", (e) => AddCrewToInfirmary());
+            _eventManager.On("DisableShields", (e) => DisableShields());
+        }
+
+        public void DisableShields()
+        {
+            // if shields already down, no need to disable
+            if (Shields < 1)
+                return;
+            Shields = 0;
+            string message = "Our shields are down. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+        }
+
+        public void AddCrewToInfirmary(int count = 1)
+        {
+            var crew = Crew.Where(c => c.State == CrewState.Available || c.State == CrewState.Returning || c.State == CrewState.Mission).OrderBy(c => c.State).ToList();
+            foreach (var item in crew)
+            {
+                if (count < 1)
+                    break;
+                item.State = CrewState.Infirmary;
+                if(!string.IsNullOrEmpty(item.MissionName))
+                {
+                    // we moved a crew member from a mission to the infirmary, trigger an event to notify threat manager to update the threat
+                    _eventManager.Trigger("RemoveCrewFromMission", new RemoveCrewFromMissionEvent(item.MissionName, item.Type));
+                    item.MissionName = string.Empty;
+                }
+                string message = $"One crew member was moved to the infirmary. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                count--;
+            }
+            
         }
 
         public void ProcessBoardingShipMission(DefaultEvent e)

@@ -61,6 +61,8 @@ namespace DeepSpaceDSixAlexa.Events
     }
 
     public interface IEvent { }
+
+
     public class DefaultEvent : IEvent { 
         public string Message { get; set; }
         public DefaultEvent() { }

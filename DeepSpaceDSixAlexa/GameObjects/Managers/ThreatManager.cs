@@ -34,6 +34,20 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 var threat = ExternalThreats.First(t => t.Health <= 0);
                 ExternalThreats.Remove(threat);
             });
+
+            _eventManager.On("RemoveCrewFromMission", (e) => RemoveCrewFromMission((RemoveCrewFromMissionEvent)e));
+        }
+
+        public void RemoveCrewFromMission(RemoveCrewFromMissionEvent e)
+        {
+            // search external threats first
+            var threat = (Threat)ExternalThreats.FirstOrDefault(t => t.Name == e.ThreatName);
+            if (threat == null)
+                threat = InternalThreats.FirstOrDefault(t => t.Name == e.ThreatName);
+
+            threat.AwayMissions.First(a => a.IsAssigned && a.Type == e.Type).IsAssigned = false;
+            string message = $"{e.Type} crew was removed from the {e.ThreatName} mission. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
         public void Initialize(int difficulty)
@@ -74,6 +88,13 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
             
             var threatsToActivate = ExternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).OrderByDescending(t => t.Health).ToList();
+            // if no threats, check if we have mercenary
+            if(threatsToActivate.Count < 1)
+            {
+                var mercenary = ExternalThreats.FirstOrDefault(t => t.Id == "M" && !t.IsDisabled);
+                if (mercenary != null)
+                    threatsToActivate.Add(mercenary);
+            }
             if (threatsToActivate.Count < 1)
             {
                 message = "No threats were activated this round. ";

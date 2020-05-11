@@ -4,8 +4,8 @@
     {
         Available,
         Returning,
-        Infirmary,
         Mission,
+        Infirmary,
         Locked,
     }
 }
