@@ -53,6 +53,7 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new HealCrewIntentHandler());
             pipeline.RequestHandlers.Add(new RemoveThreatFromScannerIntentHandler());
             pipeline.RequestHandlers.Add(new TransformCrewIntentHandler());
+            pipeline.RequestHandlers.Add(new SendCrewOnAMissionIntentHandler());
             pipeline.RequestHandlers.Add(new EndTurnIntentHandler());
 
             var response = await pipeline.Process(skillRequest, game);

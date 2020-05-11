@@ -94,6 +94,19 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             InternalThreats.ForEach(t => t.IsDisabled = false);
         }
 
+        public bool CheckIfMissionComplete(Threat threat)
+        {
+            if(threat.AwayMissions.Count(a => a.IsAssigned) >= threat.MinimumMissionsToComplete)
+            {
+                // mission is complete, fire on destroy for this threat and remove it from the threat list
+                threat.OnDestroy();
+                threat.OnMissionComplete(_eventManager);
+                ExternalThreats.Remove(threat as ExternalThreat);
+                return true;
+            }
+            return false;
+        }
+
         public string GetThreatsAsString()
         {
             if (ExternalThreats.Count == 1)

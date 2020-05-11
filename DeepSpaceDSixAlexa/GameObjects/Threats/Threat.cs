@@ -1,5 +1,6 @@
 ﻿using DeepSpaceDSixAlexa.Enums;
 using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,14 +17,16 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         public string Name { get; set; }
         public List<int> ActivationList { get; set; }
         [JsonIgnore]
-        public bool HasMission => MissionCrewTypes.Count > 0;
-        public List<CrewType> MissionCrewTypes { get; set; }
+        public bool HasMission => AwayMissions.Count > 0;
+        public List<Mission> AwayMissions { get; set; }
+        [JsonIgnore]
+        public virtual int MinimumMissionsToComplete => AwayMissions.Count;
         public bool IsDisabled { get; set; }
 
         public Threat()
         {
             ActivationList = new List<int>();
-            MissionCrewTypes = new List<CrewType>();
+            AwayMissions = new List<Mission>();
         }
 
         /// <summary>
@@ -37,9 +40,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         /// <summary>
         /// Some threats may have an action when destroyed.
         /// </summary>
-        public virtual void OnDestroy()
-        {
+        public virtual void OnDestroy() { }
 
-        }
+            public virtual void OnMissionComplete(EventManager eventManager) { }
     }
 }

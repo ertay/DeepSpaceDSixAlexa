@@ -45,6 +45,15 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             _eventManager = eventManager;
 
             _eventManager.On("DamageShip", (e) => ProcessDamage((DamageShipEvent)e));
+            _eventManager.On("BoardingShipMissionComplete", (e) => ProcessBoardingShipMission((DefaultEvent)e));
+        }
+
+        public void ProcessBoardingShipMission(DefaultEvent e)
+        {
+            // the tactical crew used to complete the boarding ship mission goes to infirmary
+            var tactical = Crew.First(c => c.Type == CrewType.Tactical&& c.MissionName == e.Message);
+            tactical.State = CrewState.Infirmary;
+            tactical.MissionName = string.Empty;
         }
 
         public void ProcessDamage(DamageShipEvent e)
@@ -103,9 +112,24 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 
         public virtual void EndTurn() { }
 
-        public void SendCrewOnMission(CrewType crew, Threat threat)
+        public void SendCrewOnMission(CrewDie crew, Threat threat)
         {
+            threat.AwayMissions.First(a => a.Type == crew.Type && !a.IsAssigned).IsAssigned = true;
+            crew.State = CrewState.Mission;
+            crew.MissionName = threat.Name;
 
+        }
+
+        public void CompleteMission(Threat threat)
+        {
+            foreach (var item in Crew)
+            {
+                if(item.State == CrewState.Mission && item.MissionName == threat.Name)
+                {
+                    item.State = CrewState.Returning;
+                    item.MissionName = string.Empty;
+                }
+            }
         }
 
         public string GetAvailableCrewAsString()
