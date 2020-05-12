@@ -26,6 +26,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         public virtual int ScannerSize => 3;
 
         public List<CrewDie> Crew { get; set; }
+
+        public Dictionary<string, bool> ShipSystems { get; set; }
         
         [JsonIgnore]
         public int AvailableCrewCount => Crew.Count(c => c.State == CrewState.Available);
@@ -38,6 +40,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         [JsonIgnore]
         public int ScannerCount => Crew.Count(c => c.State == CrewState.Locked);
 
+        private bool _shipAttackedThisRound;
+
         protected EventManager _eventManager;
 
         public Ship() { }
@@ -49,8 +53,19 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             _eventManager.On("BoardingShipMissionComplete", (e) => ProcessBoardingShipMission((DefaultEvent)e));
             _eventManager.On("BomberAttack", (e) => AddCrewToInfirmary());
             _eventManager.On("DisableShields", (e) => DisableShields());
+            _eventManager.On("NebulaSpawned", (e) => NebulaSpawned());
+            _eventManager.On("NebulaDestroyed", (e) => ShipSystems["ShieldsOffline"] = false);
+            _eventManager.On("ScoutAttack", (e) => ProcessScoutAttack((DamageShipEvent)e));
         }
 
+        public void NebulaSpawned()
+        {
+            ShipSystems["ShieldsOffline"] = true;
+            Shields = 0;
+            string message = $"We have entered a Nebula. Our shields are down and cannot be recharged while the Nebula is active. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+        }
+        
         public void DisableShields()
         {
             // if shields already down, no need to disable
@@ -92,11 +107,12 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 
         public void ProcessDamage(DamageShipEvent e)
         {
+            _shipAttackedThisRound = true;
             if(e.IgnoreShields || Shields == 0)
             {
                 Hull -= e.Damage;
                 Hull = Math.Max(0, Hull);
-                string msg = $"{e.ThreatName} opened fire and caused {e.Damage} hull damage. ";
+                string msg = $"{e.Message} and caused {e.Damage} hull damage. ";
                 _eventManager.Trigger("AppendMessage", new DefaultEvent(msg));
                 return;
             }
@@ -108,14 +124,20 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             {
                 Hull -= Math.Abs(Shields);
                 Hull = Math.Max(0, Hull);
-                message = $"{e.ThreatName} opened fire that destroyed our shields and caused {Math.Abs(Shields)} hull damage. ";
+                message = $"{e.Message} which destroyed our shields and caused {Math.Abs(Shields)} hull damage. ";
                 Shields = 0;
             }
             else
-                message = $"{e.ThreatName} opened fire and caused {e.Damage} damage to our shields. ";
+                message = $"{e.Message} and caused {e.Damage} damage to our shields. ";
 
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
 
+        }
+
+        public void ProcessScoutAttack(DamageShipEvent e)
+        {
+            if (_shipAttackedThisRound)
+                ProcessDamage(e);
         }
 
         public virtual void InitializeShip()
@@ -126,6 +148,9 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             {
                 Crew.Add(new CrewDie());
             }
+            ShipSystems = new Dictionary<string, bool>();
+            ShipSystems.Add("ShieldsOffline", false);
+            ShipSystems.Add("CommsOffline", false);
 
         }
 

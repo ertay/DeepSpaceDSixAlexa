@@ -32,6 +32,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             _eventManager.On("ThreatDestroyed", (e) =>
             {
                 var threat = ExternalThreats.First(t => t.Health <= 0);
+                threat.OnDestroy(_eventManager);
                 ExternalThreats.Remove(threat);
             });
 
@@ -73,6 +74,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 
             }
             _eventManager.Trigger("NewThreat", new DefaultEvent() { Message = threat.Name});
+            threat.OnSpawn(_eventManager);
             return threat;
 
         }
@@ -95,6 +97,16 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 if (mercenary != null)
                     threatsToActivate.Add(mercenary);
             }
+            // check if Scout needs to be added to the list
+            if(threatsToActivate.Count > 0)
+            {
+                var scout = ExternalThreats.FirstOrDefault(t => t.Id == "SS" && !t.IsDisabled);
+                if (scout != null)
+                    threatsToActivate.Add(scout);
+
+            }
+
+            
             if (threatsToActivate.Count < 1)
             {
                 message = "No threats were activated this round. ";

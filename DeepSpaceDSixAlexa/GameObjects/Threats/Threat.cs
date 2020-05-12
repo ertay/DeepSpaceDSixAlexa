@@ -29,6 +29,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
             AwayMissions = new List<Mission>();
         }
 
+        public virtual void OnSpawn(EventManager eventManager = null) { }
+
         /// <summary>
         /// This method should fire when the threat die rolls the number that is on the activation list.
         /// </summary>
@@ -40,7 +42,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         /// <summary>
         /// Some threats may have an action when destroyed.
         /// </summary>
-        public virtual void OnDestroy() { }
+        public virtual void OnDestroy(EventManager eventManager = null) { }
 
             public virtual void OnMissionComplete(EventManager eventManager) { }
     }

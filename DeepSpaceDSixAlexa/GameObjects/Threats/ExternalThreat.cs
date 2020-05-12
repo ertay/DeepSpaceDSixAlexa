@@ -17,7 +17,7 @@ public int Health { get; set; }
         {
             if (IsDisabled)
                 return;
-            var damageEvent = new DamageShipEvent(Name, Damage);
+            var damageEvent = new DamageShipEvent(Name, Damage, $"{Name} opened fire");
             eventManager.Trigger("DamageShip", damageEvent);
             
         }

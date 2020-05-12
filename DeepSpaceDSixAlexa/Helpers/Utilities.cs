@@ -14,12 +14,9 @@ public static List<Threat> GenerateThreatDeck(int difficulty)
         {
             var testThreats = new List<Threat>()
             {
-                { new RaidersThreat(){ Id = "ROne", Name = "Raiders One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){1, 2, 3, 4, 5, 6} } },
-                { new ExternalThreat(){ Id = "M", Name = "Mercenary", Health = 3, MaxHealth = 3, Damage = 2, } },
-                { new BountyShipThreat(){ Id = "BtyShip", Name = "Bounty Ship", Health = 4, MaxHealth = 4, Damage = 1, ActivationList = new List<int>(){1, 2} } },
-                                { new BomberThreat(){ Id = "BOne", Name = "Bomber One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
-                { new BomberThreat(){ Id = "BTwo", Name = "Bomber Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
-                { new BomberThreat(){ Id = "BThree", Name = "Bomber Three", Health = 3, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){3, 4} } },
+                { new ScoutingShipThreat(){ Id = "SS", Name = "Scouting Ship", Health = 3, MaxHealth = 3, Damage = 1} },
+                { new ExternalThreat(){ Id = "ACOne", Name = "Assault Cruiser One", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){1, 2 } } },
+
             };
             var threats = new List<Threat>()
             {
@@ -44,6 +41,9 @@ public static List<Threat> GenerateThreatDeck(int difficulty)
                 { new RaidersThreat(){ Id = "ROne", Name = "Raiders One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){4, 6} } },
                 { new RaidersThreat(){ Id = "RTwo", Name = "Raiders Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){4, 6} } },
                 { new RaidersThreat(){ Id = "RThree", Name = "Raiders Three", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){1, 4} } },
+                { new MeteoroidThreat(){ Id = "Meteoroid", Name = "Meteoroid", Health = 4, MaxHealth = 4, Damage = 5, ActivationList = new List<int>(){1} } },
+                { new NebulaThreat(){ Id = "N", Name = "Nebula", Health = 3, MaxHealth = 3, Damage = 0, ActivationList = new List<int>(){1, 2, 3, 4, 5} } },
+                { new ScoutingShipThreat(){ Id = "SS", Name = "Scouting Ship", Health = 3, MaxHealth = 3, Damage = 1} },
             };
             threats.Shuffle();
             return testThreats;
