@@ -7,5 +7,6 @@
         Mission,
         Infirmary,
         Locked,
+        Distracted
     }
 }

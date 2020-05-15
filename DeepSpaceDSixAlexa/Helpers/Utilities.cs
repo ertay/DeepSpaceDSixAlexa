@@ -2,6 +2,7 @@
 using DeepSpaceDSixAlexa.Extensions;
 using DeepSpaceDSixAlexa.GameObjects.Threats;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeepSpaceDSixAlexa.Helpers
 {
@@ -10,10 +11,15 @@ namespace DeepSpaceDSixAlexa.Helpers
     /// </summary>
     public static class Utilities
     {
-public static List<Threat> GenerateThreatDeck(int difficulty)
+public static List<Threat> GenerateThreatDeck(int noPanicNumber)
         {
             var testThreats = new List<Threat>()
             {
+
+
+                { new NoPanicCard() },
+                { new CloakedThreats(){ Id = "CT", Name = "Cloaked Threats", ActivationList = new List<int>(){2}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Commander} } } },
+                { new BoostMorale(){ Id = "BM", Name = "Boost Morale", ActivationList = new List<int>(){6 } } },
                 { new ScoutingShipThreat(){ Id = "SS", Name = "Scouting Ship", Health = 3, MaxHealth = 3, Damage = 1} },
                 { new ExternalThreat(){ Id = "ACOne", Name = "Assault Cruiser One", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){1, 2 } } },
 
@@ -44,9 +50,26 @@ public static List<Threat> GenerateThreatDeck(int difficulty)
                 { new MeteoroidThreat(){ Id = "Meteoroid", Name = "Meteoroid", Health = 4, MaxHealth = 4, Damage = 5, ActivationList = new List<int>(){1} } },
                 { new NebulaThreat(){ Id = "N", Name = "Nebula", Health = 3, MaxHealth = 3, Damage = 0, ActivationList = new List<int>(){1, 2, 3, 4, 5} } },
                 { new ScoutingShipThreat(){ Id = "SS", Name = "Scouting Ship", Health = 3, MaxHealth = 3, Damage = 1} },
+                { new BoostMorale(){ Id = "BM", Name = "Boost Morale", ActivationList = new List<int>(){6 } } },
+                { new CloakedThreats(){ Id = "CT", Name = "Cloaked Threats", ActivationList = new List<int>(){2}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Commander} } } },
+                { new CosmicExistentialismThreat(){ Id = "CE", Name = "Cosmic Existentialism", AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science} } } },
+                { new CommsOfflineThreat(){ Id = "CO", Name = "Comms Offline", AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Engineering} } } },
+                { new DistractedThreat(){ Id = "D", Name = "Distracted", ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical}, new Mission() { Type = CrewType.Medical} } } },
+                { new FriendlyFire(){ Id = "FF", Name = "Friendly Fire", } },
+                { new PandemicThreat(){ Id = "P", Name = "Pandemic", ActivationList = new List<int>(){1}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Medical} } } },
+                { new InvadersThreat(){ Id = "INV", Name = "Invaders", ActivationList = new List<int>(){2, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Tactical}, new Mission() { Type = CrewType.Tactical} } } },
+                { new PanelExplosionThreat(){ Id = "PE", Name = "Panel Explosion", AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical} } } },
+                { new TimeWarpThreat(){ Id = "TW", Name = "Time Warp", ActivationList = new List<int>(){2}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Science} } } },
+                { new SolarWindsThreat(){ Id = "SW", Name = "Solar Winds", ActivationList = new List<int>(){2 } } },
+                { new RobotUprisingThreat(){ Id = "RU", Name = "Robot Uprising", ActivationList = new List<int>(){1, 2, 3 }, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Engineering} } } },
             };
+            for (int i = 0; i < noPanicNumber; i++)
+            {
+                threats.Add(new NoPanicCard());
+
+            }
             threats.Shuffle();
-            return testThreats;
+            return threats;
         }
     }
 }

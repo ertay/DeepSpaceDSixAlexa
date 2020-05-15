@@ -30,6 +30,9 @@ namespace DeepSpaceDSixAlexa.Intents
 
             if (game.ThreatManager.ExternalThreats.Count < 1 && game.ThreatManager.InternalThreats.Count < 1)
                 return ResponseCreator.Ask("There are no threats to disable with the stasis beam. ", game.RepromptMessage, information.SkillRequest.Session);
+
+            if (ship.ShipSystems["ScienceUnavailable"])
+                return ResponseCreator.Ask("Our science crew are having an existentialism crisis and are unavailable. Send a science crew on a mission to deal with cosmic existentialism to be able to use them again. ", game.RepromptMessage, information.SkillRequest.Session);
             // check if enemy target is present
             var request = (IntentRequest)information.SkillRequest.Request;
             string threatId = request.Intent.Slots["Threat"].GetSlotId();

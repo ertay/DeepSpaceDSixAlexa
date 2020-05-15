@@ -29,6 +29,9 @@ namespace DeepSpaceDSixAlexa.Intents
             if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Commander&& c.State == CrewState.Available))
                 return ResponseCreator.Ask($"We have no available commander to transform crew. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
 
+            if (ship.ShipSystems["CommsOffline"])
+                return ResponseCreator.Ask("Our comms are offline. We cannot use our commander crew until you send an engineer on a mission to fix the communication systems. ", game.RepromptMessage, information.SkillRequest.Session);
+
             if (ship.AvailableCrewCount < 2)
                 return ResponseCreator.Ask("There are no other available crew members to transform. ", game.RepromptMessage, information.SkillRequest.Session);
             // check if source crew type is available and present

@@ -71,7 +71,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             ThreatManager.InitializeEvents(_eventManager);
             Ship.InitializeShip();
             Message += "Captain, we are receiving a transmission from ";
-            ThreatManager.Initialize(1);
+            ThreatManager.Initialize(6);
             
             Message += "Rolling  the crew dice. ";
             Ship.RollCrewDice();
@@ -115,7 +115,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             }
 
             var attributes = new Dictionary<string, object>();
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto};
             attributes.Add("game", JsonConvert.SerializeObject(this, settings));
             _session.Attributes = attributes;
         }
@@ -130,7 +130,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             if (_session.Attributes.Count < 1)
                 return;
 
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto};
             Game gameObject = JsonConvert.DeserializeObject<Game>(_session.Attributes["game"].ToString(), settings);
 
             InitializeEventManager();

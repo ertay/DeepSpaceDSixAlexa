@@ -52,10 +52,84 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             _eventManager.On("DamageShip", (e) => ProcessDamage((DamageShipEvent)e));
             _eventManager.On("BoardingShipMissionComplete", (e) => ProcessBoardingShipMission((DefaultEvent)e));
             _eventManager.On("BomberAttack", (e) => AddCrewToInfirmary());
+            _eventManager.On("InvadersActivated", (e) => AddCrewToInfirmary());
+            _eventManager.On("PandemicActivated", (e) => AddCrewToInfirmary());
+            _eventManager.On("RobotUprisingActivated", (e) => AddCrewToInfirmary());
             _eventManager.On("DisableShields", (e) => DisableShields());
             _eventManager.On("NebulaSpawned", (e) => NebulaSpawned());
             _eventManager.On("NebulaDestroyed", (e) => ShipSystems["ShieldsOffline"] = false);
             _eventManager.On("ScoutAttack", (e) => ProcessScoutAttack((DamageShipEvent)e));
+            _eventManager.On("BoostMoraleActivated", (e) => ProcessBoostMorale());
+            eventManager.On("CommsOfflineActivated", (e) => ShipSystems["CommsOffline"] = true);
+            eventManager.On("CommsOfflineDeactivated", (e) => ShipSystems["CommsOffline"] = false);
+            eventManager.On("CosmicExistentialismActivated", (e) => ShipSystems["ScienceUnavailable"] = true);
+            eventManager.On("CosmicExistentialismDeactivated", (e) => ShipSystems["ScienceUnavailable"] = false);
+            _eventManager.On("DistractedActivated", (e) => ProcessDistracted());
+            _eventManager.On("DistractedDeactivated", (e) => ProcessDistracted(true));
+            _eventManager.On("FriendlyFire", (e) => ProcessFriendlyFire());
+            eventManager.On("PanelExplosionActivated", (e) => ShipSystems["EngineeringUnavailable"] = true);
+            eventManager.On("PanelExplosionDeactivated", (e) => ShipSystems["EngineeringUnavailable"] = false);
+        }
+
+        private void ProcessFriendlyFire()
+        {
+            var tacticalCrew = Crew.Where(c => c.Type == CrewType.Tactical && c.State != CrewState.Infirmary && c.State != CrewState.Distracted).ToList();
+            int tacticalCount= tacticalCrew.Count;
+            string message = "";
+            if(tacticalCount < 1)
+            {
+                message = "Friendly fire drawn from the threat deck, but we had no tactical crew in this round to get wounded and moved to infirmary. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                return;
+            }
+            // wew have tactical crew let's move them to infirmary
+            message = $"Friendly fire drawn from the threat deck. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+            AddCrewToInfirmary(tacticalCrew, tacticalCount);            
+
+        }
+
+        private void ProcessDistracted(bool isComplete = false)
+        {
+            // processes the distracted event
+            // when is complete is true, it means that we should return the distracted unit
+            string message = "";
+            if(isComplete)
+            {
+                Crew.First(c => c.State == CrewState.Distracted).State = CrewState.Returning;
+                message = "A distracted crew member will be available on the next round. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                return;
+            }
+            // distract a crew mebmer, look in returning crew first
+            CrewDie crew = null;
+            if (ReturningCrewCount > 0)
+                crew = Crew.First(c => c.State == CrewState.Returning);
+            else if (AvailableCrewCount > 0)
+                crew = Crew.First(c => c.State == CrewState.Available);
+            else
+            {
+                message = "We have no returning or available crew to distract. ";
+                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                return;
+            }
+            crew.State = CrewState.Distracted;
+            message = "One crew member is distracted and cannot be used until you send two medical crew on a mission to deal with the distracted  threat, or the threat die rolls a three or a four. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+
+        }
+
+        private void ProcessBoostMorale()
+        {
+            string message = "";
+            if (ScannerCount < 1)
+                message = "Boost morale activated, but our scanneres were already empty. ";
+            else
+            {
+                Crew.First(c => c.State == CrewState.Locked).State = CrewState.Returning;
+                message = "Boost morale was activated and one threat was removed from our scanners! ";
+            }
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
         public void NebulaSpawned()
@@ -75,10 +149,22 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             string message = "Our shields are down. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
-
-        public void AddCrewToInfirmary(int count = 1)
+        /// <summary>
+        /// Adds crew to the infirmary. If no parameters specified, one crew member will be added.
+        /// Otherwise if a list is supplied as a parameter, crew in that list will be moved to infirmary.
+        /// Count is equal to how many units from the lsit will be moved to infirmary.
+        /// </summary>
+        /// <param name="crew"></param>
+        /// <param name="count"></param>
+        public void AddCrewToInfirmary(List<CrewDie> crew= null, int count = 1)
         {
-            var crew = Crew.Where(c => c.State == CrewState.Available || c.State == CrewState.Returning || c.State == CrewState.Mission).OrderBy(c => c.State).ToList();
+            if (crew == null)
+            {
+                crew = Crew.Where(c => c.State == CrewState.Available || c.State == CrewState.Returning || c.State == CrewState.Mission).OrderBy(c => c.State).ToList();
+            }
+            if (crew.Count < 1)
+                return;
+            int totalCount = count;
             foreach (var item in crew)
             {
                 if (count < 1)
@@ -90,11 +176,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
                     _eventManager.Trigger("RemoveCrewFromMission", new RemoveCrewFromMissionEvent(item.MissionName, item.Type));
                     item.MissionName = string.Empty;
                 }
-                string message = $"One crew member was moved to the infirmary. ";
-                _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
                 count--;
             }
-            
+            string message = $"{totalCount} crew moved to the infirmary. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+
         }
 
         public void ProcessBoardingShipMission(DefaultEvent e)
@@ -151,6 +237,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             ShipSystems = new Dictionary<string, bool>();
             ShipSystems.Add("ShieldsOffline", false);
             ShipSystems.Add("CommsOffline", false);
+            ShipSystems.Add("ScienceUnavailable", false);
+            ShipSystems.Add("EngineeringUnavailable", false);
 
         }
 

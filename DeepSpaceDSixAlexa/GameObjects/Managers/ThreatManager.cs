@@ -13,7 +13,9 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
     {
         public Queue<Threat> ThreatDeck { get; set; }
         public List<ExternalThreat> ExternalThreats { get; set; }
-        public List<Threat> InternalThreats { get; set; }
+        public List<InternalThreat> InternalThreats { get; set; }
+
+        private bool _rollThreatDieAgain;
 
         private EventManager _eventManager;
         public ThreatManager() { }
@@ -35,8 +37,36 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 threat.OnDestroy(_eventManager);
                 ExternalThreats.Remove(threat);
             });
+            _eventManager.On("DiscardThreat", (e) =>
+            {
+                var threat = ((DefaultThreatEvent)e).Threat;
+                threat.OnDestroy(_eventManager);
+                if (threat is InternalThreat it)
+                    InternalThreats.Remove(it);
+                else if (threat is ExternalThreat et)
+                    ExternalThreats.Remove(et);
+            });
+
+            _eventManager.On("CloakedThreatsActivated", (e) => _rollThreatDieAgain = true);
 
             _eventManager.On("RemoveCrewFromMission", (e) => RemoveCrewFromMission((RemoveCrewFromMissionEvent)e));
+            _eventManager.On("TimeWarpActivated", (e) => HealExternalThreats());
+        }
+
+        public void HealExternalThreats()
+        {
+            string message = "";
+            if(ExternalThreats.Count < 1)
+            {
+                return;
+            }
+
+            foreach (var item in ExternalThreats)
+            {
+                item.Health = Math.Min(++item.Health, item.MaxHealth);
+            }
+            message = "Time warp activated. All external threats recovered one health. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
         public void RemoveCrewFromMission(RemoveCrewFromMissionEvent e)
@@ -51,11 +81,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
-        public void Initialize(int difficulty)
+        public void Initialize(int noPanicCardNumber)
         {
-            ThreatDeck = new Queue<Threat>(Utilities.GenerateThreatDeck(difficulty));
+            ThreatDeck = new Queue<Threat>(Utilities.GenerateThreatDeck(noPanicCardNumber));
             ExternalThreats = new List<ExternalThreat>();
-            InternalThreats = new List<Threat>();
+            InternalThreats = new List<InternalThreat>();
 
             DrawThreat();
         }
@@ -67,11 +97,15 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 return null;
 
             var threat = ThreatDeck.Dequeue();
-            if (threat is ExternalThreat)
+            if (threat is ExternalThreat et)
             {
-                ExternalThreats.Add(threat as ExternalThreat);
+                ExternalThreats.Add(et);
                 // TODO: Fire the on spawn method here to trigger abilities that should run when enemy spawns
                 
+            }
+            else if(threat is InternalThreat it)
+            {
+                InternalThreats.Add(it);
             }
             _eventManager.Trigger("NewThreat", new DefaultEvent() { Message = threat.Name});
             threat.OnSpawn(_eventManager);
@@ -88,8 +122,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             ThreatDie threatDie = new ThreatDie();
             string message = $"Rolling the threat die... The result is {threatDie.Value}. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+            var threatsToActivate = InternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).ToList<Threat>();
+
+            threatsToActivate.AddRange(ExternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).OrderByDescending(t => t.Health).ToList<Threat>());
             
-            var threatsToActivate = ExternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).OrderByDescending(t => t.Health).ToList();
+            
             // if no threats, check if we have mercenary
             if(threatsToActivate.Count < 1)
             {
@@ -109,13 +146,20 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             
             if (threatsToActivate.Count < 1)
             {
-                message = "No threats were activated this round. ";
+                message = "No threats were activated on this roll. ";
                 _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
             }
 
                 foreach (var item in threatsToActivate)
             {
                 item.Activate(_eventManager);
+            }
+
+                // if cloaked threats activated, we run this method again
+                if(_rollThreatDieAgain)
+            {
+                _rollThreatDieAgain = false;
+                ActivateThreats();
             }
             
         }
@@ -132,9 +176,10 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             if(threat.AwayMissions.Count(a => a.IsAssigned) >= threat.MinimumMissionsToComplete)
             {
                 // mission is complete, fire on destroy for this threat and remove it from the threat list
-                threat.OnDestroy();
+
+                
+                _eventManager.Trigger("DiscardThreat",  new DefaultThreatEvent(threat));
                 threat.OnMissionComplete(_eventManager);
-                ExternalThreats.Remove(threat as ExternalThreat);
                 return true;
             }
             return false;
@@ -142,19 +187,22 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
 
         public string GetThreatsAsString()
         {
-            if (ExternalThreats.Count == 1)
-                return ExternalThreats.First().Name;
-            else if (ExternalThreats.Count == 2)
-                return $"{ExternalThreats.First().Name}, and {ExternalThreats.Last().Name}";
-            else if (ExternalThreats.Count > 2)
+            var activeThreats = new List<Threat>();
+            activeThreats.AddRange(InternalThreats);
+            activeThreats.AddRange(ExternalThreats);
+            if (activeThreats.Count == 1)
+                return activeThreats.First().Name;
+            else if (activeThreats.Count == 2)
+                return $"{activeThreats.First().Name}, and {activeThreats.Last().Name}";
+            else if (activeThreats.Count > 2)
             {
                 string threats = "";
-                for (int i = 0; i < ExternalThreats.Count; i++)
+                for (int i = 0; i < activeThreats.Count; i++)
                 {
-                    if (i == ExternalThreats.Count - 1)
-                        threats += $"and {ExternalThreats[i].Name}";
+                    if (i == activeThreats.Count - 1)
+                        threats += $"and {activeThreats[i].Name}";
                     else
-                        threats += $"{ExternalThreats[i].Name}, ";
+                        threats += $"{activeThreats[i].Name}, ";
 
                 }
                 return threats;

@@ -28,6 +28,8 @@ namespace DeepSpaceDSixAlexa.Intents
             if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Engineering&& c.State == CrewState.Available))
                 return ResponseCreator.Ask($"We have no available engineering crew to repair the hull. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
             // TODO: Prevent hull repairs if engineering crew cannot be used
+            if (ship.ShipSystems["EngineeringUnavailable"])
+                return ResponseCreator.Ask("Our engineering crew is incapacitated from the panel explosion and cannot be used. Send a medical crew member on a mission to deal with the panel explosion. ", game.RepromptMessage, information.SkillRequest.Session);
             if (ship.Hull== ship.MaxHull)
                 return ResponseCreator.Ask("The ship's hull has not sustained any damage  yet. There is nothing to repair at the moment. ", game.RepromptMessage, information.SkillRequest.Session);
             
