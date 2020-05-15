@@ -54,7 +54,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             _eventManager.On("BomberAttack", (e) => AddCrewToInfirmary());
             _eventManager.On("InvadersActivated", (e) => AddCrewToInfirmary());
             _eventManager.On("PandemicActivated", (e) => AddCrewToInfirmary());
-            _eventManager.On("RobotUprisingActivated", (e) => AddCrewToInfirmary());
+            _eventManager.On("RobotUprisingActivated", (e) => AddCrewToInfirmary()
+            );
             _eventManager.On("DisableShields", (e) => DisableShields());
             _eventManager.On("NebulaSpawned", (e) => NebulaSpawned());
             _eventManager.On("NebulaDestroyed", (e) => ShipSystems["ShieldsOffline"] = false);

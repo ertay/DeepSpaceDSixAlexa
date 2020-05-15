@@ -16,7 +16,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
             var testThreats = new List<Threat>()
             {
 
-
+                { new BoardingShipThreat(){ Id = "BS", Name = "Boarding Ship", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Tactical}} } },
                 { new NoPanicCard() },
                 { new CloakedThreats(){ Id = "CT", Name = "Cloaked Threats", ActivationList = new List<int>(){2}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Commander} } } },
                 { new BoostMorale(){ Id = "BM", Name = "Boost Morale", ActivationList = new List<int>(){6 } } },
