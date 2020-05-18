@@ -55,12 +55,15 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             DamagePool -= damageAmount;
             threat.Health -= damageAmount;
             threat.Health = Math.Max(0, threat.Health);
+            string message = "";
             if (threat.Health <= 0)
             {
-                _eventManager.Trigger("ThreatDestroyed", new DefaultEvent() { Message = $"Our tactical crew dealt {damageAmount} damage and destroyed {threat.Name}. " });
+                message = $"Our tactical crew dealt {damageAmount} damage and destroyed {threat.Name}. ";
+                _eventManager.Trigger("DiscardThreat", new DefaultThreatEvent(threat));
             }
             else
-                _eventManager.Trigger("AttackThreat", new DefaultEvent() { Message = $"Our tactical crew opened fire at {threat.Name} and dealt {damageAmount} damage. {threat.Name} now has {threat.Health} health. "});
+                message = $"Our tactical crew opened fire at {threat.Name} and dealt {damageAmount} damage. {threat.Name} now has {threat.Health} health. ";
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
             // return true if we still have damage pool to spend
             return DamagePool > 0;
 

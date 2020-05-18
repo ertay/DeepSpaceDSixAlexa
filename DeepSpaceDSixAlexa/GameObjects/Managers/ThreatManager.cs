@@ -31,16 +31,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 DrawThreat();
                 
             });
-            _eventManager.On("ThreatDestroyed", (e) =>
-            {
-                var threat = ExternalThreats.First(t => t.Health <= 0);
-                threat.OnDestroy(_eventManager);
-                ExternalThreats.Remove(threat);
-            });
             _eventManager.On("DiscardThreat", (e) =>
             {
                 var threat = ((DefaultThreatEvent)e).Threat;
                 threat.OnDestroy(_eventManager);
+                _eventManager.Trigger("MissionCleanup", (DefaultThreatEvent)e);
                 if (threat is InternalThreat it)
                     InternalThreats.Remove(it);
                 else if (threat is ExternalThreat et)
@@ -177,9 +172,9 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             {
                 // mission is complete, fire on destroy for this threat and remove it from the threat list
 
-                
-                _eventManager.Trigger("DiscardThreat",  new DefaultThreatEvent(threat));
                 threat.OnMissionComplete(_eventManager);
+                _eventManager.Trigger("DiscardThreat",  new DefaultThreatEvent(threat));
+                
                 return true;
             }
             return false;

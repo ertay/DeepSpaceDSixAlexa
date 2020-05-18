@@ -70,6 +70,18 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             _eventManager.On("FriendlyFire", (e) => ProcessFriendlyFire());
             eventManager.On("PanelExplosionActivated", (e) => ShipSystems["EngineeringUnavailable"] = true);
             eventManager.On("PanelExplosionDeactivated", (e) => ShipSystems["EngineeringUnavailable"] = false);
+            eventManager.On("MissionCleanup", (e) => ProcessMissionCleanUp((DefaultThreatEvent)e));
+        }
+
+        private void ProcessMissionCleanUp(DefaultThreatEvent e)
+        {
+            // makes sure all crew is returned after a threat is discarded
+            var crew = Crew.Where(c => c.MissionName == e.Threat.Name);
+            foreach (var item in crew)
+            {
+                item.MissionName = string.Empty;
+                item.State = CrewState.Returning;
+            }
         }
 
         private void ProcessFriendlyFire()
@@ -98,8 +110,10 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             if(isComplete)
             {
                 Crew.First(c => c.State == CrewState.Distracted).State = CrewState.Returning;
+                
                 message = "A distracted crew member will be available on the next round. ";
                 _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                
                 return;
             }
             // distract a crew mebmer, look in returning crew first

@@ -15,13 +15,9 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
         {
             var testThreats = new List<Threat>()
             {
+                { new ExternalThreat(){ Id = "H", Name = "Hijackers", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){4, 5}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Commander}, new Mission() { Type = CrewType.Commander} } } },
 
-                { new BoardingShipThreat(){ Id = "BS", Name = "Boarding Ship", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Tactical}} } },
-                { new NoPanicCard() },
-                { new CloakedThreats(){ Id = "CT", Name = "Cloaked Threats", ActivationList = new List<int>(){2}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Science}, new Mission() { Type = CrewType.Commander} } } },
-                { new BoostMorale(){ Id = "BM", Name = "Boost Morale", ActivationList = new List<int>(){6 } } },
-                { new ScoutingShipThreat(){ Id = "SS", Name = "Scouting Ship", Health = 3, MaxHealth = 3, Damage = 1} },
-                { new ExternalThreat(){ Id = "ACOne", Name = "Assault Cruiser One", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){1, 2 } } },
+
 
             };
             var threats = new List<Threat>()
@@ -69,7 +65,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
 
             }
             threats.Shuffle();
-            return threats;
+            return testThreats;
         }
     }
 }

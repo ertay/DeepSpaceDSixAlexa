@@ -54,8 +54,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             _eventManager.On("AppendMessage", (e) => Message += ((DefaultEvent)e).Message);
             _eventManager.On("ScannerDrawThreatCard", (e) => Message += $"Our scanners have detected a new threat: ");
             _eventManager.On("NewThreat", (e) => Message += $"{((DefaultEvent)e).Message}. ");
-            _eventManager.On("ThreatDestroyed", (e) => Message += ((DefaultEvent)e).Message);
-            _eventManager.On("AttackThreat", (e) => Message += ((DefaultEvent)e).Message);
+            
 
         }
 
