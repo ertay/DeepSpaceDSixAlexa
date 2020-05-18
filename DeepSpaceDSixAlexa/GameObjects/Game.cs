@@ -89,6 +89,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         public void EndTurn()
         {
             Ship.EndTurn();
+            GameState = GameState.PlayerTurn;
             if (ThreatManager.ThreatDeck.Count > 0)
             {
                 Message += "New threat has entered the battle: ";
