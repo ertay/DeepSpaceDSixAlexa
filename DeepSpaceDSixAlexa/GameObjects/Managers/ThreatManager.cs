@@ -102,7 +102,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             {
                 InternalThreats.Add(it);
             }
-            _eventManager.Trigger("NewThreat", new DefaultEvent() { Message = threat.Name});
+            
             threat.OnSpawn(_eventManager);
             return threat;
 
@@ -125,14 +125,14 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             // if no threats, check if we have mercenary
             if(threatsToActivate.Count < 1)
             {
-                var mercenary = ExternalThreats.FirstOrDefault(t => t.Id == "M" && !t.IsDisabled);
+                var mercenary = ExternalThreats.FirstOrDefault(t => t is MercenaryThreat && !t.IsDisabled);
                 if (mercenary != null)
                     threatsToActivate.Add(mercenary);
             }
             // check if Scout needs to be added to the list
             if(threatsToActivate.Count > 0)
             {
-                var scout = ExternalThreats.FirstOrDefault(t => t.Id == "SS" && !t.IsDisabled);
+                var scout = ExternalThreats.FirstOrDefault(t => t is ScoutingShipThreat && !t.IsDisabled);
                 if (scout != null)
                     threatsToActivate.Add(scout);
 
@@ -143,6 +143,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             {
                 message = "No threats were activated on this roll. ";
                 _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+
             }
 
                 foreach (var item in threatsToActivate)
@@ -178,6 +179,17 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
                 return true;
             }
             return false;
+        }
+
+        public Threat GetActiveThreat(string id)
+        {
+            Threat threat = ExternalThreats.FirstOrDefault(t => t.Id == id) as Threat;
+            if (threat == null)
+            {
+                // no active external threat with that id, let's check internal threats
+                threat = InternalThreats.FirstOrDefault(t => t.Id == id) as Threat;
+            }
+            return threat;
         }
 
         public string GetThreatsAsString()

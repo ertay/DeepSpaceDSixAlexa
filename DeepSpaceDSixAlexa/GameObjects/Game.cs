@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace DeepSpaceDSixAlexa.GameObjects
 {
@@ -52,8 +51,8 @@ namespace DeepSpaceDSixAlexa.GameObjects
         {
             _eventManager = new EventManager();
             _eventManager.On("AppendMessage", (e) => Message += ((DefaultEvent)e).Message);
-            _eventManager.On("ScannerDrawThreatCard", (e) => Message += $"Our scanners have detected a new threat: ");
-            _eventManager.On("NewThreat", (e) => Message += $"{((DefaultEvent)e).Message}. ");
+            _eventManager.On("ScannerDrawThreatCard", (e) => Message += $"Our scanners are detecting a new threat. ");
+            // _eventManager.On("NewThreat", (e) => Message += $"{((DefaultEvent)e).Message}. ");
             
 
         }
@@ -69,7 +68,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             ThreatManager = new ThreatManager();
             ThreatManager.InitializeEvents(_eventManager);
             Ship.InitializeShip();
-            Message += "Captain, we are receiving a transmission from ";
+            
             ThreatManager.Initialize(6);
             
             Message += "Rolling  the crew dice. ";
@@ -92,7 +91,6 @@ namespace DeepSpaceDSixAlexa.GameObjects
             GameState = GameState.PlayerTurn;
             if (ThreatManager.ThreatDeck.Count > 0)
             {
-                Message += "New threat has entered the battle: ";
                 ThreatManager.DrawThreat();
             }
             ThreatManager.ActivateThreats();

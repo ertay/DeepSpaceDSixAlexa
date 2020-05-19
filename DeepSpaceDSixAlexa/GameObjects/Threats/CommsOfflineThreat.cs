@@ -5,10 +5,10 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
     public class CommsOfflineThreat : InternalThreat
     {
         public override string SpawnMessage => "Comms offline drawn from the threat deck. Our commander crew cannot be used until you send an engineering crew member on a mission to deal with this. ";
-
+        public override string Description => "Our commander crew cannot be used while this threat is active. ";
         public override void OnSpawn(EventManager eventManager = null)
         {
-            eventManager.Trigger("AppendMessage", new DefaultEvent(SpawnMessage));
+            base.OnSpawn(eventManager);
             eventManager.Trigger("CommsOfflineActivated");
         }
 

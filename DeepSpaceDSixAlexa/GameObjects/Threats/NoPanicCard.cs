@@ -8,7 +8,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
 
         public override void OnSpawn(EventManager eventManager = null)
         {
-            eventManager.Trigger("AppendMessage", new DefaultEvent(SpawnMessage));
+            base.OnSpawn(eventManager);
             eventManager.Trigger("DiscardThreat", new DefaultThreatEvent(this));
         }
     }

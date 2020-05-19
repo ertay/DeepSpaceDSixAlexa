@@ -36,10 +36,10 @@ namespace DeepSpaceDSixAlexa.Intents
             // check if enemy target is present
             var request = (IntentRequest)information.SkillRequest.Request;
             string threatId = request.Intent.Slots["Threat"].GetSlotId();
-            var threat = game.ThreatManager.ExternalThreats.FirstOrDefault(t => t.Id == threatId);
+            var threat = game.ThreatManager.GetActiveThreat(threatId);
             if (threat == null)
             {
-                string threatName = request.Intent.Slots["ExternalThreat"].Value;
+                string threatName = request.Intent.Slots["Threat"].Value;
                 return ResponseCreator.Ask($"{threatName} is not a valid target. Try firing the stasis beam again and provide one of the following: {game.ThreatManager.GetThreatsAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
             }
             // we have a valid target, let's check if it is already disabled

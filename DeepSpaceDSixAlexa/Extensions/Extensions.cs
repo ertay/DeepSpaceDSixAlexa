@@ -19,7 +19,7 @@ namespace DeepSpaceDSixAlexa.Extensions
             }
             catch(Exception ex)
             {
-                id = "-1";
+                id = string.Empty;
             }
             return id;
         }

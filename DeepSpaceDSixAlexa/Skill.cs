@@ -46,6 +46,8 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new RepeatIntentHandler());
             pipeline.RequestHandlers.Add(new FallbackIntentHandler());
             pipeline.RequestHandlers.Add(new NewGameIntentHandler());
+            pipeline.RequestHandlers.Add(new ShipStatusIntentHandler());
+            pipeline.RequestHandlers.Add(new ThreatInfoIntentHandler());
             pipeline.RequestHandlers.Add(new AssignTacticalToWeaponsIntentHandler());
             pipeline.RequestHandlers.Add(new FireWeaponsIntentHandler());
             pipeline.RequestHandlers.Add(new FireStasisBeamIntentHandler());

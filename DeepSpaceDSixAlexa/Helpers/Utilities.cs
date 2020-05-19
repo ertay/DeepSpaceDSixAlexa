@@ -29,7 +29,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
                 { new ExternalThreat(){ Id = "DTwo", Name = "Drone Two", Health = 1, MaxHealth = 1, Damage = 1, ActivationList = new List<int>(){3, 5} } },
                 { new ExternalThreat(){ Id = "FS", Name = "Flagship", Health = 4, MaxHealth = 4, Damage = 3, ActivationList = new List<int>(){4, 5, 6} } },
                 { new ExternalThreat(){ Id = "I", Name = "Intercepter", Health = 3, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){1, 2, 3, 4, 5} } },
-                { new ExternalThreat(){ Id = "IX", Name = "Intercepter X", Health = 4, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){1, 2, 3, 4, 5} } },
+                { new ExternalThreat(){ Id = "IX", Name = "Intercepter X", Health = 4, MaxHealth = 4, Damage = 1, ActivationList = new List<int>(){1, 2, 3, 4, 5} } },
                 { new ExternalThreat(){ Id = "SPOne", Name = "Space Pirates One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){3, 6} } },
                 { new ExternalThreat(){ Id = "SPTwo", Name = "Space Pirates Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){3, 6} } },
                 { new ExternalThreat(){ Id = "SPThree", Name = "Space Pirates Three", Health = 3, MaxHealth = 3, Damage = 2, ActivationList = new List<int>(){1, 3} } },
@@ -38,7 +38,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
                 { new BomberThreat(){ Id = "BOne", Name = "Bomber One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
                 { new BomberThreat(){ Id = "BTwo", Name = "Bomber Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
                 { new BomberThreat(){ Id = "BThree", Name = "Bomber Three", Health = 3, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){3, 4} } },
-                { new ExternalThreat(){ Id = "M", Name = "Mercenary", Health = 3, MaxHealth = 3, Damage = 2, } },
+                { new MercenaryThreat(){ Id = "M", Name = "Mercenary", Health = 3, MaxHealth = 3, Damage = 2, } },
                 { new BountyShipThreat(){ Id = "BtyShip", Name = "Bounty Ship", Health = 4, MaxHealth = 4, Damage = 1, ActivationList = new List<int>(){1, 2} } },
                 { new RaidersThreat(){ Id = "ROne", Name = "Raiders One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){4, 6} } },
                 { new RaidersThreat(){ Id = "RTwo", Name = "Raiders Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){4, 6} } },
@@ -65,7 +65,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
 
             }
             threats.Shuffle();
-            return testThreats;
+            return threats;
         }
     }
 }

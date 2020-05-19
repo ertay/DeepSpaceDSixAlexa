@@ -5,10 +5,10 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
     public class DistractedThreat : InternalThreat
     {
         public override string SpawnMessage => "Distracted drawn from the threat deck. ";
-
+        public override string Description => $"One crew member is distracted and cannot be used. The crew member is returned when this threat is activated with {GetActivationListAsString()}. ";
         public override void OnSpawn(EventManager eventManager = null)
         {
-            eventManager.Trigger("AppendMessage", new DefaultEvent(SpawnMessage));
+            base.OnSpawn(eventManager);
             eventManager.Trigger("DistractedActivated");
         }
 

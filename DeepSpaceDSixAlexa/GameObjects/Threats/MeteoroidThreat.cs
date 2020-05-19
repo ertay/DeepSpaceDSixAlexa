@@ -4,6 +4,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
 {
     public class MeteoroidThreat : ExternalThreat
     {
+        public override string SpawnMessage => $"{Name} drawn from the threat deck. External threat with {Health} health. {Name}'s health is reduced by one when activated with {GetActivationListAsString()}. Deals {Damage} damage when destroyed. ";
         public override void Activate(EventManager eventManager)
         {
             if (IsDisabled)
@@ -17,7 +18,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
             }
             else
             {
-                eventManager.Trigger("ThreatDestroyed");
+                eventManager.Trigger("DiscardThreat", new DefaultThreatEvent(this));
 
             }
 
@@ -34,6 +35,14 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
 
             var eventArgs = new DamageShipEvent(Name, Damage, $"{Name} exploded");
             eventManager.Trigger("DamageShip", eventArgs);
+        }
+
+        public override string GetInfoMessage()
+        {
+            string message = $"{Name}. External threat with {Health} out of {MaxHealth} health. ";
+            message += Damage > 0 ? $"{Name}'s health is reduced by one when activated with {GetActivationListAsString()}. Deals {Damage} damage when destroyed. " : "";
+            message += AwayMissions.Count > 0 ? $"This threat can be destroyed by sending {GetMissionsAsString()} on a mission. " : "";
+            return message;
         }
     }
 }
