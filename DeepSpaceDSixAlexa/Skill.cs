@@ -35,11 +35,13 @@ namespace DeepSpaceDSixAlexa
             }
 
 
+            bool isFirstRequest = skillRequest.Session.Attributes == null ? true : false;
+            Game game = new Game();
+            await game.InitializeGame(skillRequest.Session);
 
-            Game game = new Game(skillRequest.Session);
             var pipeline = new AlexaRequestPipeline();
 
-            pipeline.RequestHandlers.Add(new LaunchIntentHandler());
+            pipeline.RequestHandlers.Add(new LaunchIntentHandler(isFirstRequest));
             pipeline.RequestHandlers.Add(new SessionEndedRequestHandler());
             pipeline.RequestHandlers.Add(new CancelIntentHandler());
             pipeline.RequestHandlers.Add(new HelpIntentHandler());
@@ -58,6 +60,7 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new TransformCrewIntentHandler());
             pipeline.RequestHandlers.Add(new SendCrewOnAMissionIntentHandler());
             pipeline.RequestHandlers.Add(new EndTurnIntentHandler());
+            pipeline.RequestHandlers.Add(new ContinuePromptIntentHandler());
 
             var response = await pipeline.Process(skillRequest, game);
          
