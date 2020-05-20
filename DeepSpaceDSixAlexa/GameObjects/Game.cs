@@ -116,6 +116,12 @@ namespace DeepSpaceDSixAlexa.GameObjects
 
         public void EndTurn()
         {
+            // check if we need to return crew from a mission
+            if(Ship.AvailableCrewCount + Ship.ReturningCrewCount < 1 && Ship.MissionCrewCount > 0)
+            {
+                Message = "You need to return a crew member from a mission because we won't have any available crew for the next turn. Say return crew from a mission to do that. ";
+                return;
+            }
             Ship.EndTurn();
             GameState = GameState.PlayerTurn;
             if (ThreatManager.ThreatDeck.Count > 0)

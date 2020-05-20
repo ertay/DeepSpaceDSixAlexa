@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
-using System.Threading;
+using System.Threading
+    ;
 
 namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 {
@@ -109,8 +110,15 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             string message = "";
             if(isComplete)
             {
-                Crew.First(c => c.State == CrewState.Distracted).State = CrewState.Returning;
-                
+                var distractedCrew = Crew.FirstOrDefault(c => c.State == CrewState.Distracted);
+                if(distractedCrew == null)
+                {
+                    // sometimes there might be an special scenario where you can't distract a crew member
+                    message = "The distracted threat was discarded.  ";
+                    _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
+                    return;
+                }
+                distractedCrew.State = CrewState.Returning;
                 message = "A distracted crew member will be available on the next round. ";
                 _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
                 
@@ -280,6 +288,14 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             crew.State = CrewState.Mission;
             crew.MissionName = threat.Name;
 
+        }
+
+        public void ReturnCrewFromMission(CrewDie crew, Threat threat)
+        {
+
+            crew.State = CrewState.Returning;
+            crew.MissionName = string.Empty;
+            _eventManager.Trigger("RemoveCrewFromMission", new RemoveCrewFromMissionEvent(threat.Name, crew.Type));
         }
 
         public void CompleteMission(Threat threat)
