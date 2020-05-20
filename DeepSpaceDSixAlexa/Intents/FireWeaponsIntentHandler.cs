@@ -35,7 +35,7 @@ namespace DeepSpaceDSixAlexa.Intents
             if(threat == null)
             {
                 string threatName = request.Intent.Slots["ExternalThreat"].Value;
-                return ResponseCreator.Ask($"{threatName} is not a valid target. Try firing weapons again and provide one of the following: {game.ThreatManager.GetThreatsAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"{threatName} is not a valid target. Try firing weapons again and provide one of the following: {game.ThreatManager.GetThreatsAsString(false, true)}. ", game.RepromptMessage, information.SkillRequest.Session);
             }
             // let's check the damage amount 
             int damage = request.Intent.Slots["DamageAmount"].ExtractNumber();
@@ -47,9 +47,9 @@ namespace DeepSpaceDSixAlexa.Intents
 
             if(canFireAgain && game.ThreatManager.ExternalThreats.Count > 0)
             {
-                game.Message += $"We have {ship.DamagePool} more damage to spend. Say fire weapons again and  choose one of the following targets: {game.ThreatManager.GetThreatsAsString()}. ";
+                game.Message += $"We have {ship.DamagePool} more damage to spend. Say fire weapons again and  choose one of the following targets: {game.ThreatManager.GetThreatsAsString(false, true)}. ";
                 game.RepeatMessage = game.Message;
-                game.RepromptMessage = $"Our tactical crew is waiting for your orders to open fire. We need to spend {ship.DamagePool} more damage. Say fire weapons and provide one of the following targets: {game.ThreatManager.GetThreatsAsString()}. ";
+                game.RepromptMessage = $"Our tactical crew is waiting for your orders to open fire. We need to spend {ship.DamagePool} more damage. Say fire weapons and provide one of the following targets: {game.ThreatManager.GetThreatsAsString(false, true)}. ";
                 game.SaveData();
                 return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);
             }

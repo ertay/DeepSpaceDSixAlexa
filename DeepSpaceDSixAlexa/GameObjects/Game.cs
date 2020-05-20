@@ -106,9 +106,13 @@ namespace DeepSpaceDSixAlexa.GameObjects
             GameState = GameState.PlayerTurn;
 
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";
-            Message += Ship.ScannerCount > 0 ? $"Number of threats on our scanners is {Ship.ScannerCount}. What are your orders, captain?" : "What are your orders, captain?";
+            Message += Ship.ScannerCount > 0 ? $"Number of locked threats in our scanners is {Ship.ScannerCount}. " : "";
+            Message += ThreatManager.InternalThreats.Count > 0 ? $"Number of active internal threats is {ThreatManager.InternalThreats.Count}. {ThreatManager.GetThreatsAsString(true, false)}. " : "";
+            Message += ThreatManager.ExternalThreats.Count > 0 ? $"Number of active external threats is {ThreatManager.ExternalThreats.Count}. {ThreatManager.GetThreatsAsString(false, true)}. " : "";
+            Message += ThreatManager.ExternalThreats.Count + ThreatManager.InternalThreats.Count < 1 ? "There are no active threats at the moment. " : "";
+            Message += "What are your orders, captain? ";
             RepeatMessage = Message;
-            RepromptMessage = $"{ThreatManager.GetThreatsAsString()}. We have {Ship.GetAvailableCrewAsString()}. What are your orders, Captain?";
+            RepromptMessage = $"Awaiting your orders, captain. ";
 
             SaveData();
 
@@ -134,10 +138,14 @@ namespace DeepSpaceDSixAlexa.GameObjects
             Message += "Rolling the crew dice. ";
             Ship.RollCrewDice();
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";
-            Message += $"There are {ThreatManager.ExternalThreats.Count} external threats: {ThreatManager.GetThreatsAsString()}. ";
+            Message +=Ship.ScannerCount > 0 ? $"Number of locked threats in our scanners is {Ship.ScannerCount}. " : "";
+            Message += ThreatManager.InternalThreats.Count > 0 ? $"Number of active internal threats is {ThreatManager.InternalThreats.Count}. {ThreatManager.GetThreatsAsString(true,false)}. " : "";
+            Message += ThreatManager.ExternalThreats.Count > 0 ? $"Number of active external threats is {ThreatManager.ExternalThreats.Count}. {ThreatManager.GetThreatsAsString(false, true)}. " : "";
+            Message += ThreatManager.ExternalThreats.Count + ThreatManager.InternalThreats.Count < 1 ? "There are no active threats at the moment. " : "";
+            Message += "What are your orders, captain? ";
             RepeatMessage = Message;
             RepromptMessage = "What are your orders, captain? ";
-            SaveData(); ;
+            SaveData();
         }
 
         public void SaveData()

@@ -192,11 +192,13 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             return threat;
         }
 
-        public string GetThreatsAsString()
+        public string GetThreatsAsString(bool includeInternalThreats = true, bool includeExternalThreats= true)
         {
             var activeThreats = new List<Threat>();
-            activeThreats.AddRange(InternalThreats);
-            activeThreats.AddRange(ExternalThreats);
+            if(includeInternalThreats)
+                activeThreats.AddRange(InternalThreats);
+            if(includeExternalThreats)
+                activeThreats.AddRange(ExternalThreats);
             if (activeThreats.Count == 1)
                 return activeThreats.First().Name;
             else if (activeThreats.Count == 2)
