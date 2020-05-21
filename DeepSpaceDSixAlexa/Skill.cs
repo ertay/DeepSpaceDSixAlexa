@@ -48,7 +48,9 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new RepeatIntentHandler());
             pipeline.RequestHandlers.Add(new FallbackIntentHandler());
             pipeline.RequestHandlers.Add(new NewGameIntentHandler());
+            pipeline.RequestHandlers.Add(new MoreTimeIntentHandler());
             pipeline.RequestHandlers.Add(new ShipStatusIntentHandler());
+            pipeline.RequestHandlers.Add(new ThreatStatusIntentHandler());
             pipeline.RequestHandlers.Add(new ThreatInfoIntentHandler());
             pipeline.RequestHandlers.Add(new AssignTacticalToWeaponsIntentHandler());
             pipeline.RequestHandlers.Add(new FireWeaponsIntentHandler());
@@ -62,6 +64,7 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new ReturnCrewFromMissionIntentHandler());
             pipeline.RequestHandlers.Add(new EndTurnIntentHandler());
             pipeline.RequestHandlers.Add(new ContinuePromptIntentHandler());
+            pipeline.RequestHandlers.Add(new AlwaysTrueIntentHandler());
 
             var response = await pipeline.Process(skillRequest, game);
          

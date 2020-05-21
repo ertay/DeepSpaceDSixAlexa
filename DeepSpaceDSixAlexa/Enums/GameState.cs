@@ -9,7 +9,10 @@ namespace DeepSpaceDSixAlexa.Enums
         MainMenu,
         PlayerTurn,
         FiringWeapons,
-        ContinueGamePrompt
+        ContinueGamePrompt,
+
 
     }
+
+    
 }

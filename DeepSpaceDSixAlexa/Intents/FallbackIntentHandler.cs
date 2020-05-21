@@ -5,6 +5,7 @@ using Alexa.NET.RequestHandlers.Handlers;
 using Alexa.NET.Response;
 using DeepSpaceDSixAlexa.Extensions;
 using DeepSpaceDSixAlexa.GameObjects;
+using System.Threading.Tasks;
 
 namespace DeepSpaceDSixAlexa.Intents
 {
@@ -22,5 +23,19 @@ namespace DeepSpaceDSixAlexa.Intents
             string message = "I'm sorry Captain, that is not a valid command. ";
             return ResponseCreator.Ask(message + game.RepeatMessage, game.RepromptMessage, information.SkillRequest.Session);
         }
+    }
+
+    public class AlwaysTrueIntentHandler : AlwaysTrueRequestHandler
+    {
+        
+
+        public override async Task<SkillResponse> Handle(AlexaRequestInformation<SkillRequest> information)
+        {
+            var game = (Game)information.Context;
+            string message = "I'm sorry Captain, that is not a valid command. ";
+            return ResponseCreator.Ask(message + game.RepeatMessage, game.RepromptMessage, information.SkillRequest.Session);
+        }
+
+        
     }
 }

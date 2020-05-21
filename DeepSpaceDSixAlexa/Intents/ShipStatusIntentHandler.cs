@@ -5,6 +5,7 @@ using Alexa.NET.RequestHandlers.Handlers;
 using Alexa.NET.Response;
 using DeepSpaceDSixAlexa.Extensions;
 using DeepSpaceDSixAlexa.GameObjects;
+using DeepSpaceDSixAlexa.GameObjects.Threats;
 using System.Linq;
 
 namespace DeepSpaceDSixAlexa.Intents

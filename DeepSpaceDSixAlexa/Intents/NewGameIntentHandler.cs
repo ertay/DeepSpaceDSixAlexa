@@ -19,8 +19,13 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game) information.Context;
-            
-            game.CreateNewGame();
+            var request = (IntentRequest)information.SkillRequest.Request;
+            int difficulty = request.Intent.Slots["NoPanicNumber"].ExtractNumber();
+
+            if (difficulty< 0 || difficulty > 6)
+                return ResponseCreator.Ask($"Please provide a valid difficulty level. Say new game again and provide a number between zero and six. A Higher number of Don't Panic cards will make the game easier. ", game.RepromptMessage, information.SkillRequest.Session);
+
+            game.CreateNewGame(difficulty);
             
             return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);
         }

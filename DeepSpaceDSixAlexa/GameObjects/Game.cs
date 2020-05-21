@@ -86,7 +86,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             SaveData();
         }
 
-        public void CreateNewGame()
+        public void CreateNewGame(int difficulty)
         {
             InitializeEventManager();
             IsGameInProgress = true;
@@ -98,7 +98,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             ThreatManager.InitializeEvents(_eventManager);
             Ship.InitializeShip();
 
-            ThreatManager.Initialize(6);
+            ThreatManager.Initialize(difficulty);
 
             Message += "Rolling  the crew dice. ";
             Ship.RollCrewDice();
