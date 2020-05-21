@@ -23,6 +23,9 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("You need to start a new game before recharging your shields. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
+
             var ship = game.Ship as HalcyonShip;
             if (ship == null)
                 return ResponseCreator.Ask("This ship cannot recharge the shields. ", game.RepromptMessage, information.SkillRequest.Session);

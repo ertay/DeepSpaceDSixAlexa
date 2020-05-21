@@ -19,9 +19,9 @@ namespace DeepSpaceDSixAlexa.Intents
             var intentRequest = (IntentRequest)information.SkillRequest.Request;
             bool isContinuePrompt = ((Game)information.Context).GameState == GameState.ContinueGamePrompt;
             _intentName = intentRequest.Intent.Name;
-            bool yesOrNoIntent = _intentName == BuiltInIntent.Yes || _intentName == BuiltInIntent.No;
             
-            return isContinuePrompt && yesOrNoIntent;
+            
+            return isContinuePrompt;
         }
 
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
@@ -36,11 +36,16 @@ namespace DeepSpaceDSixAlexa.Intents
                 game.GameState = game.LastGameState;
                 game.SaveData();
             }
-            else
+            else if (_intentName == BuiltInIntent.No)
             {
                 // answer was No, go back to main menu
                 game.IsGameInProgress = false;
                 game.Welcome();
+            }
+            else
+            {
+                // invalid answer, ask the continue game prompt again
+                return ResponseCreator.Ask("I'm sorry, I didn't get that. Do you want to continue playing your last unfinished game? ", "To continue your last game, say yes. Otherwise, say no. ", information.SkillRequest.Session);
             }
 
             return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);

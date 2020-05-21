@@ -20,7 +20,10 @@ namespace DeepSpaceDSixAlexa.Intents
         {
             var game = (Game)information.Context;
 
-            if(game.ThreatManager.ExternalThreats.Count < 1 && game.ThreatManager.InternalThreats.Count < 1)
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("To get information about the current active threats, you need to start a new game. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
+
+            if (game.ThreatManager.ExternalThreats.Count < 1 && game.ThreatManager.InternalThreats.Count < 1)
             {
                 return ResponseCreator.Ask("There are no active threats at the moment. Use the threat information command when you need information about an active threat. ", game.RepromptMessage, information.SkillRequest.Session);
             }

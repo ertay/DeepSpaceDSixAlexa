@@ -22,6 +22,9 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("To assign your tactical crew to the weapons, you need to start a new game. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
+
             var ship = game.Ship as HalcyonShip;
             if (ship == null)
                 return ResponseCreator.Ask("That is not a valid action. ", game.RepromptMessage, information.SkillRequest.Session);

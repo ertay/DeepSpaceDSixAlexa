@@ -19,6 +19,8 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("You need to start a new game before ending your turn. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
 
             game.EndTurn();
 

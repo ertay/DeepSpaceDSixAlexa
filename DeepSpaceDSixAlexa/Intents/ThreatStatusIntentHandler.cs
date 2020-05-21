@@ -19,6 +19,9 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("To get information about the current active threats, you need to start a new game. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
+
 
             var threatManager= game.ThreatManager;
             string message = "";

@@ -22,6 +22,10 @@ namespace DeepSpaceDSixAlexa.Intents
         {
             var game = (Game)information.Context;
 
+            if (!game.IsGameInProgress)
+                return ResponseCreator.Ask("To learn about the ship's status, you need to start a game. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
+
+
             var ship = game.Ship;
             string message = "";
             message += ship.AvailableCrewCount > 0 ? $"{ship.GetAvailableCrewAsString()} waiting for orders. " : "We have no available crew. ";
