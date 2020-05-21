@@ -120,6 +120,17 @@ namespace DeepSpaceDSixAlexa.GameObjects
 
         public void EndTurn()
         {
+            // check if we won
+            if(IsVictorious())
+            {
+                Message += "Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
+                RepromptMessage = "You are victorious! Say new game to play again. ";
+                RepeatMessage = Message;
+                GameOver();
+                SaveData();
+                return;
+            }
+
             // check if we need to return crew from a mission
             if(Ship.AvailableCrewCount + Ship.ReturningCrewCount < 1 && Ship.MissionCrewCount > 0)
             {
@@ -135,6 +146,27 @@ namespace DeepSpaceDSixAlexa.GameObjects
             ThreatManager.ActivateThreats();
             // reset threats when their turn is over
             ThreatManager.ResetThreats();
+            // check if we are dead
+            if(IsShipDestroyed())
+            {
+                RepeatMessage = "Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! Game over. To play again, say new game. ";
+                RepromptMessage = "To start a new game, say new game. ";
+                Message += RepeatMessage;
+                GameOver();
+                SaveData();
+                return;
+            }
+            // check if we're out of crew to roll
+            if(AreCrewIncapacitated())
+            {
+                RepeatMessage = "I am sorry, captain. All of our crew is incapacitated. Game over. To start a new game, say new  game. ";
+                Message += RepeatMessage;
+                RepromptMessage = "Game over. To play again, say new game. ";
+                GameOver();
+                SaveData();
+                return;
+            }
+
             Message += "Rolling the crew dice. ";
             Ship.RollCrewDice();
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";
@@ -146,6 +178,37 @@ namespace DeepSpaceDSixAlexa.GameObjects
             RepeatMessage = Message;
             RepromptMessage = "What are your orders, captain? ";
             SaveData();
+        }
+
+        public void GameOver()
+        {
+            GameState = GameState.MainMenu;
+            IsGameInProgress = false;
+        }
+
+        public bool IsVictorious()
+        {
+            if (ThreatManager == null)
+                return false;
+            // returns true if threat deck is empty and all external threats are destroyed
+            return ThreatManager.ThreatDeck.Count == 0 && ThreatManager.ExternalThreats.Count == 0;
+        }
+
+        public bool IsShipDestroyed()
+        {
+            if (Ship == null)
+                return false;
+
+            return Ship.Hull < 1;
+            
+        }
+
+        public bool AreCrewIncapacitated()
+        {
+            if (Ship == null)
+                return false;
+            // returns true if there's no crew to roll for the next turn
+            return Ship.ReturningCrewCount + Ship.AvailableCrewCount < 1;
         }
 
         public void SaveData()
