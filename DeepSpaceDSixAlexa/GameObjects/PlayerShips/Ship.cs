@@ -77,7 +77,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         private void ProcessMissionCleanUp(DefaultThreatEvent e)
         {
             // makes sure all crew is returned after a threat is discarded
-            var crew = Crew.Where(c => c.MissionName == e.Threat.Name);
+            var crew = Crew.Where(c => c.State == CrewState.Mission && c.MissionName == e.Threat.Name);
             foreach (var item in crew)
             {
                 item.MissionName = string.Empty;

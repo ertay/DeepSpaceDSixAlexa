@@ -83,6 +83,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             InternalThreats = new List<InternalThreat>();
 
             DrawThreat();
+            DrawThreat();
         }
 
         public Threat DrawThreat()

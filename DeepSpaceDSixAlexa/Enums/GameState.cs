@@ -11,7 +11,6 @@ namespace DeepSpaceDSixAlexa.Enums
         FiringWeapons,
         ContinueGamePrompt,
         Rules,
-        RulesPrompt,
     }
 
     
