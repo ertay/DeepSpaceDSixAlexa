@@ -10,8 +10,8 @@ namespace DeepSpaceDSixAlexa.Enums
         PlayerTurn,
         FiringWeapons,
         ContinueGamePrompt,
-
-
+        Rules,
+        RulesPrompt,
     }
 
     

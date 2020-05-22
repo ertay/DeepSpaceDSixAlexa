@@ -33,6 +33,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         public string RepeatMessage { get; set; }
 
         public bool IsGameInProgress { get; set; }
+        public int RuleSelector { get; set; }
 
         private EventManager _eventManager;
 
@@ -246,6 +247,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             GameState = gameObject.GameState;
             LastGameState = gameObject.LastGameState;
             IsGameInProgress = gameObject.IsGameInProgress;
+            RuleSelector = gameObject.RuleSelector;
 
         }
 

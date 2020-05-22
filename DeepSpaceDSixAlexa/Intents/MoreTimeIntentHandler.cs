@@ -8,6 +8,7 @@ using DeepSpaceDSixAlexa.GameObjects;
 
 namespace DeepSpaceDSixAlexa.Intents
 {
+
     public class MoreTimeIntentHandler : SynchronousRequestHandler
     {
         public override bool CanHandle(AlexaRequestInformation<SkillRequest> information)
@@ -19,7 +20,7 @@ namespace DeepSpaceDSixAlexa.Intents
         public override SkillResponse HandleSyncRequest(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
-            if(!game.IsGameInProgress)
+            if (!game.IsGameInProgress)
                 return ResponseCreator.Ask("You can ask for more time when you're playing the game. Say new game to begin. ", "To start, say new game. ", information.SkillRequest.Session);
             string message = "When ready, say Alexa to issue your next command. ";
             message += "<audio src=\"soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_countdown_loop_64s_minimal_01\"/> What are your orders, captain? ";
