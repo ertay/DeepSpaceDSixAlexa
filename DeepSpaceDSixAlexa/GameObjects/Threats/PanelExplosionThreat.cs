@@ -8,7 +8,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         public override string Description => "Our engineering crew cannot be used while this threat is active. ";
         public override void OnSpawn(EventManager eventManager = null)
     {
-            base.OnSpawn(eventManager);
+            eventManager.Trigger("AppendMessage", new DefaultEvent(DeepSpaceDSixAlexa.Helpers.SoundFx.PanelExplosion + SpawnMessage));
         eventManager.Trigger("PanelExplosionActivated");
     }
 

@@ -267,7 +267,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
 
         public void RollCrewDice()
         {
-            Crew.ForEach(c => c.Roll());
+
+            Crew.ForEach(c => c.Roll());            
             // check if scanners have 3 threats and notify ThreatManager to draw a new threat
             
             while(Crew.Count(c => c.State == CrewState.Locked) >= ScannerSize)

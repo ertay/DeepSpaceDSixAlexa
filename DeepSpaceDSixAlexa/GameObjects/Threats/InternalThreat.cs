@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.Helpers;
+using Newtonsoft.Json;
 using System.ComponentModel;
 
 namespace DeepSpaceDSixAlexa.GameObjects.Threats
@@ -8,6 +10,12 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         
         [JsonIgnore]
         public virtual string Description => string.Empty;
+
+        public override void OnSpawn(EventManager eventManager = null)
+        {
+            eventManager.Trigger("AppendMessage", new DefaultEvent($"{SoundFx.InternalThreatAlarm}"));
+            base.OnSpawn(eventManager);
+        }
 
         public override string GetInfoMessage()
         {

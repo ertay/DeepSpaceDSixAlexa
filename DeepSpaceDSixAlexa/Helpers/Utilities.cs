@@ -129,8 +129,9 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
         {
             var testThreats = new List<Threat>()
             {
-                { new DistractedThreat(){ Id = "D", Name = "Distracted", ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical}, new Mission() { Type = CrewType.Medical} } } },
-                { new NoPanicCard()},
+                { new PanelExplosionThreat(){ Id = "PE", Name = "Panel Explosion", AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical} } } },
+                //{ new DistractedThreat(){ Id = "D", Name = "Distracted", ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical}, new Mission() { Type = CrewType.Medical} } } },
+                //{ new NoPanicCard()},
                 { new ExternalThreat(){ Id = "ACTwo", Name = "Assault Cruiser Two", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){4, 5 } } },
 
 

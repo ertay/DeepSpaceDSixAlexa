@@ -2,6 +2,7 @@
 using DeepSpaceDSixAlexa.Events;
 using DeepSpaceDSixAlexa.GameObjects.Dice;
 using DeepSpaceDSixAlexa.GameObjects.Threats;
+using DeepSpaceDSixAlexa.Helpers;
 using System;
 using System.Linq;
 
@@ -55,6 +56,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             DamagePool -= damageAmount;
             threat.Health -= damageAmount;
             threat.Health = Math.Max(0, threat.Health);
+            _eventManager.Trigger("AppendMessage", new DefaultEvent(SoundFx.FireWeapons));
             string message = "";
             if (threat.Health <= 0)
             {
@@ -74,7 +76,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         {
             threat.IsDisabled = true;
             Crew.First(c => c.Type == CrewType.Science && c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"Our scientist crew fired the stasis beam and disabled {threat.Name} until the next round. ";
+            string message = $"{SoundFx.StasisBeam}Our science crew fired the stasis beam and disabled {threat.Name} until the next round. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
 
         }
@@ -83,7 +85,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         {
             Shields = MaxShields;
             Crew.First(c => c.Type == CrewType.Science && c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"Our science crew recharged the shields back to full power. We now have {Shields} shields. ";
+            string message = $"{SoundFx.RechargeShields}Our science crew recharged the shields back to full power. We now have {Shields} shields. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
 
         }
@@ -109,7 +111,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
                 item.State = item.State == CrewState.Infirmary ? CrewState.Returning : item.State;
             }
             Crew.First(c => c.Type == CrewType.Medical && c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"Our medical crew healed {infirmaryCount} crew member{plural} that will be available next round. ";
+            string message = $"{SoundFx.HealCrew}Our medical crew healed {infirmaryCount} crew member{plural} that will be available next round. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 
@@ -117,7 +119,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
         {
             Crew.First(c => c.Type == CrewType.Threat && c.State == CrewState.Locked).State = CrewState.Returning;
             Crew.First(c => c.Type == CrewType.Medical&& c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"Medical crew was used to remove a threat die from our scanners. The number of locked threats on our scanners is {ScannerCount}. ";
+            string message = $"{SoundFx.ThreatRemoved}Medical crew was used to remove a threat die from our scanners. The number of locked threats on our scanners is {ScannerCount}. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 

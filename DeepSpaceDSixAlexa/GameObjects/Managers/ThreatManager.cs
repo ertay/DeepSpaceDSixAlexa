@@ -27,7 +27,14 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             _eventManager.On("ScannerDrawThreatCard", (e) =>
             {
                 // scanners detected a threat, draw a card
-
+                if(ThreatDeck.Count < 1)
+                {
+                    // if threat deck is empty deal 1 damage to the player ship
+                    var damageEvent = new DamageShipEvent(string.Empty, 1, $"We have three locked threats in our scanners, but the threat deck is empty. An unknown entity opened fire");
+                    eventManager.Trigger("DamageShip", damageEvent);
+                    return;
+                }
+                _eventManager.Trigger("AppendMessage", new DefaultEvent("Our scanners are detecting a new threat. "));
                 DrawThreat();
                 
             });

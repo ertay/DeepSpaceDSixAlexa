@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.Helpers;
 
 namespace DeepSpaceDSixAlexa.GameObjects.Threats
 {
@@ -13,6 +14,8 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         {
             if (IsDisabled)
                 return;
+
+            eventManager.Trigger("AppendMessage", new DefaultEvent(SoundFx.SolarWinds));
 
             var eventArgs = new DamageShipEvent(Name, 5, $"The extreme heat from  the {Name} affected the ship systems");
             eventManager.Trigger("DamageShip", eventArgs);

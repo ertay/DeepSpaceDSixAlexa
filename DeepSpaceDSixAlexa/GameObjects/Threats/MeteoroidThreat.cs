@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.Helpers;
 
 namespace DeepSpaceDSixAlexa.GameObjects.Threats
 {
@@ -28,11 +29,11 @@ namespace DeepSpaceDSixAlexa.GameObjects.Threats
         {
             if (IsDisabled)
             {
-                eventManager.Trigger("AppendMessage", new DefaultEvent($"{Name} exploded, but our stasis beam prevented damage to our ship. "));
+                eventManager.Trigger("AppendMessage", new DefaultEvent($"{SoundFx.ThreatDestroyed()}{Name} exploded, but our stasis beam prevented damage to our ship. "));
                 return;
             }
-                
 
+            eventManager.Trigger("AppendMessage", new DefaultEvent($"{SoundFx.ThreatDestroyed()} "));
             var eventArgs = new DamageShipEvent(Name, Damage, $"{Name} exploded");
             eventManager.Trigger("DamageShip", eventArgs);
         }

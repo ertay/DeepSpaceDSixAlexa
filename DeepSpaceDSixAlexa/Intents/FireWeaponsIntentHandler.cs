@@ -51,9 +51,6 @@ namespace DeepSpaceDSixAlexa.Intents
             // first check if we are dead after destroying threat, some threats may cause damage to use when they die
             if (game.IsShipDestroyed())
             {
-                game.RepeatMessage = "Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! Game over. To play again, say new game. ";
-                game.RepromptMessage = "To start a new game, say new game. ";
-                game.Message += game.RepeatMessage;
                 game.GameOver();
                 game.SaveData();
                 return ResponseCreator.Ask(game.Message, game.RepromptMessage, information.SkillRequest.Session);

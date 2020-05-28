@@ -60,7 +60,6 @@ namespace DeepSpaceDSixAlexa.GameObjects
         {
             _eventManager = new EventManager();
             _eventManager.On("AppendMessage", (e) => Message += ((DefaultEvent)e).Message);
-            _eventManager.On("ScannerDrawThreatCard", (e) => Message += $"Our scanners are detecting a new threat. ");
             // _eventManager.On("NewThreat", (e) => Message += $"{((DefaultEvent)e).Message}. ");
 
 
@@ -150,9 +149,6 @@ namespace DeepSpaceDSixAlexa.GameObjects
             // check if we are dead
             if(IsShipDestroyed())
             {
-                RepeatMessage = "Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! Game over. To play again, say new game. ";
-                RepromptMessage = "To start a new game, say new game. ";
-                Message += RepeatMessage;
                 GameOver();
                 SaveData();
                 return;
@@ -170,6 +166,13 @@ namespace DeepSpaceDSixAlexa.GameObjects
 
             Message += "Rolling the crew dice. ";
             Ship.RollCrewDice();
+            // check if ship is destroyed, this can happen if threat deck is empty and we rolled three scanners that deals damage
+            if (IsShipDestroyed())
+            {
+                GameOver();
+                SaveData();
+                return;
+            }
             Message += $"We have {Ship.GetAvailableCrewAsString()}. ";
             Message +=Ship.ScannerCount > 0 ? $"Number of locked threats in our scanners is {Ship.ScannerCount}. " : "";
             Message += ThreatManager.InternalThreats.Count > 0 ? $"Number of active internal threats is {ThreatManager.InternalThreats.Count}. {ThreatManager.GetThreatsAsString(true,false)}. " : "";
@@ -200,7 +203,14 @@ namespace DeepSpaceDSixAlexa.GameObjects
             if (Ship == null)
                 return false;
 
-            return Ship.Hull < 1;
+            bool shipDestroyed =  Ship.Hull < 1;
+            if(shipDestroyed)
+            {
+                RepeatMessage = "Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! Game over. To play again, say new game. ";
+                RepromptMessage = "To start a new game, say new game. ";
+                Message += RepeatMessage;
+            }
+            return shipDestroyed;
             
         }
 

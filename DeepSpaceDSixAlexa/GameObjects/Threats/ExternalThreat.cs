@@ -1,4 +1,5 @@
 ﻿using DeepSpaceDSixAlexa.Events;
+using DeepSpaceDSixAlexa.Helpers;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace DeepSpaceDSixAlexa.GameObjects.Threats
@@ -16,6 +17,12 @@ public int Health { get; set; }
 
         public override string SpawnMessage => AwayMissions.Count < 1 ? $"{Name} drawn from the threat deck. External threat with {Health} health that deals {Damage} damage when activated with {GetActivationListAsString()}. " : $"{Name} drawn from the threat deck. External threat with {Health} health that deals {Damage} damage when activated with {GetActivationListAsString()}. We can send {GetMissionsAsString()} on a mission to deal with the {Name}. ";
 
+        public override void OnSpawn(EventManager eventManager = null)
+        {
+            eventManager.Trigger("AppendMessage", new DefaultEvent(SoundFx.SpawnExternalThreat()));
+            base.OnSpawn(eventManager);
+        }
+
         public override void Activate(EventManager eventManager)
         {
             if (IsDisabled)
@@ -23,6 +30,12 @@ public int Health { get; set; }
             var damageEvent = new DamageShipEvent(Name, Damage, $"{Name} opened fire");
             eventManager.Trigger("DamageShip", damageEvent);
             
+        }
+
+        public override void OnDestroy(EventManager eventManager = null)
+        {
+            // trigger explosion
+            eventManager.Trigger("AppendMessage", new DefaultEvent(SoundFx.ThreatDestroyed()));
         }
 
         public override string GetInfoMessage()
