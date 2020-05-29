@@ -28,7 +28,7 @@ namespace DeepSpaceDSixAlexa.Helpers
                     rule = "To win, you must survive by destroying all external threats in the threat deck. Say next to continue.";
                     break;
                 case 3:
-                    rule = "At the beginning of the game, you need to specify the number of Don't Panic cards that will be included in the threat deck. To make the game easier, you should include a higher number of Don't Panic cards. If you are looking for a challenge, try playing with zero Don't Panic cards. Say next to continue.";
+                    rule = "At the beginning of the game, you need to specify the number of Don't Panic cards that will be included in the threat deck. For your first game, I recommend playing with all six Don't Panic cards. If you are looking for a challenge, try playing with zero Don't Panic cards. Say next to continue.";
                     break;
                 case 4:
                     rule = "When the game starts, two threats are immediately drawn from the threat deck. The threat deck has a total of 36 threats, plus any Don't Panic cards that you've decided to include in the deck. Say next to continue.";
@@ -43,7 +43,7 @@ namespace DeepSpaceDSixAlexa.Helpers
                     rule = "The shields protect your hull from getting damaged. When a threat deals damage to  your ship, the damage goes to the shields first. When the shields reach zero, the damage is dealt to  your hull. You start the game with four shields. Say next to continue.";
                     break;
                 case 8:
-                    rule = "The scanners tracker on your ship are used to detect new threats. One of the results on your crew dice is a threat. When you roll a threat, it is immediately locked in the scanners. When three threat dice are locked in the scanners, a new threat is revealed from the deck. Now, let me tell you about your crew. Say next to continue.";
+                    rule = "The scanners tracker on your ship is used to detect new threats. One of the results on your crew dice is a threat. When you roll a threat, it is immediately locked in the scanners. When three threat dice are locked in the scanners, a new threat is revealed from the deck. Now, let me tell you about your crew. Say next to continue.";
                     break;
                 case 9:
                     rule = "The crew in your ship is represented by six crew dice that you roll every time a new round starts. Here is a list of possible results: 1. Commander. 2. Tactical. 3. Medical. 4. Science. 5. Engineering. 6. Threat. Say next to continue.";
@@ -129,6 +129,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
         {
             var testThreats = new List<Threat>()
             {
+                { new BomberThreat(){ Id = "BOne", Name = "Strike Bomber One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
                 { new PanelExplosionThreat(){ Id = "PE", Name = "Panel Explosion", AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical} } } },
                 //{ new DistractedThreat(){ Id = "D", Name = "Distracted", ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Medical}, new Mission() { Type = CrewType.Medical} } } },
                 //{ new NoPanicCard()},
@@ -152,9 +153,9 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
                 { new ExternalThreat(){ Id = "SPThree", Name = "Space Pirates Three", Health = 3, MaxHealth = 3, Damage = 2, ActivationList = new List<int>(){1, 3} } },
                 { new ExternalThreat(){ Id = "H", Name = "Hijackers", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){4, 5}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Commander}, new Mission() { Type = CrewType.Commander} } } },
                 { new BoardingShipThreat(){ Id = "BS", Name = "Boarding Ship", Health = 4, MaxHealth = 4, Damage = 2, ActivationList = new List<int>(){3, 4}, AwayMissions = new List<Mission>(){ new Mission() { Type = CrewType.Tactical}} } },
-                { new BomberThreat(){ Id = "BOne", Name = "Bomber One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
-                { new BomberThreat(){ Id = "BTwo", Name = "Bomber Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
-                { new BomberThreat(){ Id = "BThree", Name = "Bomber Three", Health = 3, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){3, 4} } },
+                { new BomberThreat(){ Id = "BOne", Name = "Strike Bomber One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
+                { new BomberThreat(){ Id = "BTwo", Name = "Strike Bomber Two", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){2, 4} } },
+                { new BomberThreat(){ Id = "BThree", Name = "Strike Bomber Three", Health = 3, MaxHealth = 3, Damage = 1, ActivationList = new List<int>(){3, 4} } },
                 { new MercenaryThreat(){ Id = "M", Name = "Mercenary", Health = 3, MaxHealth = 3, Damage = 2, } },
                 { new BountyShipThreat(){ Id = "BtyShip", Name = "Bounty Ship", Health = 4, MaxHealth = 4, Damage = 1, ActivationList = new List<int>(){1, 2} } },
                 { new RaidersThreat(){ Id = "ROne", Name = "Raiders One", Health = 2, MaxHealth = 2, Damage = 2, ActivationList = new List<int>(){4, 6} } },
@@ -182,7 +183,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
 
             }
             threats.Shuffle();
-            return threats;
+            return testThreats;
         }
     }
 }

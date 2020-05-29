@@ -97,7 +97,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             Hull += repairValue;
             Hull = Math.Min(Hull, MaxHull);
             Crew.First(c => c.Type == CrewType.Engineering && c.State == CrewState.Available).State = CrewState.Returning;
-            string message = $"Engineering crew repaired {repairValue} damage and now we have {Hull} out of {MaxHull} hull. ";
+            string message = $"Engineering crew repaired {repairValue} damage and we now have {Hull} out of {MaxHull} hull. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
         }
 

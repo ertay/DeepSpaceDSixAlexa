@@ -77,7 +77,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             }
             else
             {
-                Message = "Welcome to Deep Space D6 Beta version 1.0! Say new game to begin. Say rules to learn how to play. ";
+                Message = "Welcome to Deep Space D6 Beta version 2! Say new game to begin. Say rules to learn how to play. ";
                 RepeatMessage = Message;
                 RepromptMessage = "To start a new game, say new game. ";
                 GameState = GameState.MainMenu;
@@ -122,10 +122,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         {
             // check if we won
             if(IsVictorious())
-            {
-                Message += "Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
-                RepromptMessage = "You are victorious! Say new game to play again. ";
-                RepeatMessage = Message;
+            { 
                 GameOver();
                 SaveData();
                 return;
@@ -148,6 +145,13 @@ namespace DeepSpaceDSixAlexa.GameObjects
             ThreatManager.ResetThreats();
             // check if we are dead
             if(IsShipDestroyed())
+            {
+                GameOver();
+                SaveData();
+                return;
+            }
+            // check if we won, some threats can kill themselves when activating
+            if(IsVictorious())
             {
                 GameOver();
                 SaveData();
@@ -195,7 +199,14 @@ namespace DeepSpaceDSixAlexa.GameObjects
             if (ThreatManager == null)
                 return false;
             // returns true if threat deck is empty and all external threats are destroyed
-            return ThreatManager.ThreatDeck.Count == 0 && ThreatManager.ExternalThreats.Count == 0;
+            bool victory =  ThreatManager.ThreatDeck.Count == 0 && ThreatManager.ExternalThreats.Count == 0;
+            if(victory)
+            {
+                Message += "Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
+                RepromptMessage = "You are victorious! Say new game to play again. ";
+                RepeatMessage = Message;
+            }
+            return victory;
         }
 
         public bool IsShipDestroyed()
