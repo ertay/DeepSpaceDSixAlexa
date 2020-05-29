@@ -183,7 +183,7 @@ public static List<Threat> GenerateThreatDeck(int noPanicNumber)
 
             }
             threats.Shuffle();
-            return testThreats;
+            return threats;
         }
     }
 }
