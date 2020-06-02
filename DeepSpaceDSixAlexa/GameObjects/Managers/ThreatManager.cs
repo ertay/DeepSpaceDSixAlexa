@@ -123,7 +123,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             // TODO: Activate internal threats first
 
             ThreatDie threatDie = new ThreatDie();
-            string message = $"Rolling the threat die... The result is {threatDie.Value}. ";
+            string message = $"Rolling the threat die. {SoundFx.Dice}The result is {threatDie.Value}. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
             var threatsToActivate = InternalThreats.Where(t => !t.IsDisabled && t.ActivationList.Contains(threatDie.Value)).ToList<Threat>();
 

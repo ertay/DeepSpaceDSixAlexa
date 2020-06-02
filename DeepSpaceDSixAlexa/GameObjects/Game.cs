@@ -6,6 +6,7 @@ using DeepSpaceDSixAlexa.Enums;
 using DeepSpaceDSixAlexa.Events;
 using DeepSpaceDSixAlexa.GameObjects.Managers;
 using DeepSpaceDSixAlexa.GameObjects.PlayerShips;
+using DeepSpaceDSixAlexa.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -100,7 +101,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
 
             ThreatManager.Initialize(difficulty);
 
-            Message += "Rolling  the crew dice. ";
+            Message += $"Rolling  the crew dice. {SoundFx.Dice} ";
             Ship.RollCrewDice();
 
             GameState = GameState.PlayerTurn;
@@ -168,7 +169,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
                 return;
             }
 
-            Message += "Rolling the crew dice. ";
+            Message += $"Rolling the crew dice. {SoundFx.Dice} ";
             Ship.RollCrewDice();
             // check if ship is destroyed, this can happen if threat deck is empty and we rolled three scanners that deals damage
             if (IsShipDestroyed())
