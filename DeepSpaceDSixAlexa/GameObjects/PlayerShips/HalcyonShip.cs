@@ -44,7 +44,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.PlayerShips
             }int baseDamage = ExtraDamage ? 2 : 1;
             DamagePool = baseDamage + (tacticalCount - 1) * 2;
             ExtraDamage = true;
-            string message = $"{ tacticalCount} tactical crew assigned to the weapon systems. We can deal up to {DamagePool} damage. Say fire weapons to open fire! ";
+            string message = $"{ tacticalCount} tactical crew assigned to the weapon systems. We can deal up to {DamagePool} damage. ";
             _eventManager.Trigger("AppendMessage", new DefaultEvent(message));
             
         }

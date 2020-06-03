@@ -42,6 +42,7 @@ namespace DeepSpaceDSixAlexa.Intents
 
             // we have valid tactical count, assign them
             ship.AssignTacticalToWeapons(tacticalCount);
+            game.Message += $"Say fire weapons and  choose one of the following targets: {game.ThreatManager.GetThreatsAsString(false, true)}. ";
             // set game state to Firing Weapons
             game.GameState = GameState.FiringWeapons;
             
