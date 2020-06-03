@@ -78,8 +78,8 @@ namespace DeepSpaceDSixAlexa.GameObjects
             }
             else
             {
-                Message = "Welcome to Deep Space D6 Beta version 2! Say new game to begin. Say rules to learn how to play. ";
-                RepeatMessage = Message;
+                RepeatMessage = "Welcome to Deep Space D6 Beta version 2! Say new game to begin. Say rules to learn how to play. ";
+                Message = SoundFx.Intro + RepeatMessage;
                 RepromptMessage = "To start a new game, say new game. ";
                 GameState = GameState.MainMenu;
 
@@ -91,7 +91,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         {
             InitializeEventManager();
             IsGameInProgress = true;
-            Message = "Starting a new game. ";
+            Message = $"Starting a new game. {SoundFx.Beeping} We have traced the distress call coordinates. Prepare to warp. {SoundFx.Warp} Captain, it looks like we warped into a trap! We need to survive until all external threats are destroyed! ";
 
             Ship = new HalcyonShip();
             Ship.InitializeEvents(_eventManager);
@@ -161,7 +161,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             // check if we're out of crew to roll
             if(AreCrewIncapacitated())
             {
-                RepeatMessage = "I am sorry, captain. All of our crew is incapacitated. Game over. To start a new game, say new  game. ";
+                RepeatMessage = $"I am sorry, captain. All of our crew is incapacitated. {SoundFx.GameOver}Game over. To start a new game, say new  game. ";
                 Message += RepeatMessage;
                 RepromptMessage = "Game over. To play again, say new game. ";
                 GameOver();
@@ -203,7 +203,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             bool victory =  ThreatManager.ThreatDeck.Count == 0 && ThreatManager.ExternalThreats.Count == 0;
             if(victory)
             {
-                Message += "Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
+                Message += $"{SoundFx.Victory}Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
                 RepromptMessage = "You are victorious! Say new game to play again. ";
                 RepeatMessage = Message;
             }
@@ -218,7 +218,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             bool shipDestroyed =  Ship.Hull < 1;
             if(shipDestroyed)
             {
-                RepeatMessage = "Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! Game over. To play again, say new game. ";
+                RepeatMessage = $"Oh no, our hull is in critical condition. It was nice serving with you, captain! Farewell! {SoundFx.GameOver}Game over. To play again, say new game. ";
                 RepromptMessage = "To start a new game, say new game. ";
                 Message += RepeatMessage;
             }

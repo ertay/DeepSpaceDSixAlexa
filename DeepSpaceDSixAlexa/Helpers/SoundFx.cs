@@ -11,6 +11,11 @@ namespace DeepSpaceDSixAlexa.Helpers
     {
         private const string BASE_URL = "https://dsdsixstorage.blob.core.windows.net/soundfx/";
 
+        public static string Intro = $"<audio src=\"{BASE_URL}pm-infected-03.mp3\"/>";
+        public static string Beeping = $"<audio src=\"{BASE_URL}pm-csph-text-6.mp3\"/>";
+        public static string Warp = $"<audio src=\"{BASE_URL}pm-fssf2-tonal-energy-risers-4.mp3\"/>";
+        public static string Victory = $"<audio src=\"{BASE_URL}pm-csph-calculations-20.mp3\"/>";
+        public static string GameOver = $"<audio src=\"{BASE_URL}pm-sfm-impact-4.mp3\"/>";
         public const string Dice = "<audio src=\"soundbank://soundlibrary/toys_games/board_games/board_games_08\"/>";
         public static string ThreatRemoved = $"<audio src=\"{BASE_URL}u5BdjRcy-pm-fn-objects-items-interactions-menus-132.mp3\"/>";
         public static string FireWeapons = "<audio src=\"soundbank://soundlibrary/guns/futuristic/futuristic_03\"/>";
