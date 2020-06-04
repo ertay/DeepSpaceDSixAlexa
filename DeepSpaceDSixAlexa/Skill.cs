@@ -45,6 +45,7 @@ namespace DeepSpaceDSixAlexa
             pipeline.RequestHandlers.Add(new SessionEndedRequestHandler());
             pipeline.RequestHandlers.Add(new CancelIntentHandler());
             pipeline.RequestHandlers.Add(new HelpIntentHandler());
+            pipeline.RequestHandlers.Add(new CreditsIntentHandler());
             pipeline.RequestHandlers.Add(new ContinuePromptIntentHandler());
             pipeline.RequestHandlers.Add(new RepeatIntentHandler());
             pipeline.RequestHandlers.Add(new FallbackIntentHandler());
