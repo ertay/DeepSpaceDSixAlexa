@@ -103,7 +103,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             if (threat is ExternalThreat et)
             {
                 ExternalThreats.Add(et);
-                // TODO: Fire the on spawn method here to trigger abilities that should run when enemy spawns
+                
                 
             }
             else if(threat is InternalThreat it)
@@ -120,7 +120,7 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
         {
             if (InternalThreats.Count < 1 && ExternalThreats.Count < 1)
                 return;
-            // TODO: Activate internal threats first
+            
 
             ThreatDie threatDie = new ThreatDie();
             string message = $"Rolling the threat die. {SoundFx.Dice}The result is {threatDie.Value}. ";
@@ -200,13 +200,16 @@ namespace DeepSpaceDSixAlexa.GameObjects.Managers
             return threat;
         }
 
-        public string GetThreatsAsString(bool includeInternalThreats = true, bool includeExternalThreats= true)
+        public string GetThreatsAsString(bool includeInternalThreats = true, bool includeExternalThreats= true, bool onlyWithMissions = false)
         {
             var activeThreats = new List<Threat>();
             if(includeInternalThreats)
                 activeThreats.AddRange(InternalThreats);
             if(includeExternalThreats)
                 activeThreats.AddRange(ExternalThreats);
+            if (onlyWithMissions)
+                activeThreats.RemoveAll(t => !t.HasMission);
+
             if (activeThreats.Count == 1)
                 return activeThreats.First().Name;
             else if (activeThreats.Count == 2)

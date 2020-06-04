@@ -78,7 +78,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             }
             else
             {
-                RepeatMessage = "Welcome to Deep Space D6 Beta version 2! Say new game to begin. Say rules to learn how to play. ";
+                RepeatMessage = "Welcome to Deep Space D6 Beta version 3! Say new game to begin. Say rules to learn how to play. ";
                 Message = SoundFx.Intro + RepeatMessage;
                 RepromptMessage = "To start a new game, say new game. ";
                 GameState = GameState.MainMenu;
@@ -91,6 +91,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
         {
             InitializeEventManager();
             IsGameInProgress = true;
+
             Message = $"Starting a new game. {SoundFx.Beeping} We have traced the distress call coordinates. Prepare to warp. {SoundFx.Warp} Captain, it looks like we warped into a trap! We need to survive until all external threats are destroyed! ";
 
             Ship = new HalcyonShip();

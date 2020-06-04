@@ -51,8 +51,8 @@ namespace DeepSpaceDSixAlexa.Intents
                 return ResponseCreator.Ask("Our engineering crew is incapacitated from the panel explosion and cannot be used. Send a medical crew member on a mission to deal with the panel explosion. ", game.RepromptMessage, information.SkillRequest.Session);
             // we have a valid available crew die to send on a mission
             // check the threat
-            if (game.ThreatManager.ExternalThreats.Count < 1 && game.ThreatManager.InternalThreats.Count < 1)
-                return ResponseCreator.Ask("There are no threats at the moment. You can send your crew on missions when there is an active threat. ", game.RepromptMessage, information.SkillRequest.Session);
+            if (!game.ThreatManager.ExternalThreats.Any(t => t.HasMission) && !game.ThreatManager.InternalThreats.Any(t => t.HasMission))
+                return ResponseCreator.Ask("There are no threats with missions at the moment. Use this command when you encounter threats with missions. ", game.RepromptMessage, information.SkillRequest.Session);
             // check if enemy target is present
             string threatId = request.Intent.Slots["Threat"].GetSlotId();
             var threat = game.ThreatManager.ExternalThreats.FirstOrDefault(t => t.Id == threatId) as Threat;
@@ -63,23 +63,23 @@ namespace DeepSpaceDSixAlexa.Intents
                 if(threat == null)
                 {
                     string threatName = request.Intent.Slots["Threat"].Value;
-                    // TODO: Show threats with missions only.
-                    return ResponseCreator.Ask($"{threatName} is not a valid target. Try sending your crew on a mission again and provide one of the following: {game.ThreatManager.GetThreatsAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
+                    
+                    return ResponseCreator.Ask($"{threatName} is not a valid target. Try sending your crew on a mission again and provide one of the following: {game.ThreatManager.GetThreatsAsString(true, true, true)}. ", game.RepromptMessage, information.SkillRequest.Session);
                 }
                 
             }
             // we have a valid target, check if it has missions
             if (!threat.HasMission)
-                return ResponseCreator.Ask($"{threat.Name} cannot be destroyed by sending crew on a mission. Use this command on targets that have away missions. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"{threat.Name} cannot be dealt with by sending crew on a mission. Use this command again and provide one of the following: {game.ThreatManager.GetThreatsAsString(true, true, true)}. ", game.RepromptMessage, information.SkillRequest.Session);
             // target has mission, check if we can assign this crew type
             // TODO: list the possible mission crew types for this threat in the response
             if(!threat.AwayMissions.Any(a => a.Type == crewDie.Type))
-                return ResponseCreator.Ask($"You cannot send {crewName} on a mission to destroy {threat.Name}. Try a different crew type. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"You cannot send {crewName} on a mission to deal with {threat.Name}. Try this command again and provide a different crew type. ", game.RepromptMessage, information.SkillRequest.Session);
 
             // valid crew type for this threat selected
             // check if all the slots are filled for this type
             if(!threat.AwayMissions.Any(a => a.Type == crewDie.Type && !a.IsAssigned))
-                return ResponseCreator.Ask($"You have already assigned the required number of {crewName} crew to {threat.Name}. Try sending a different crew type on a mission to destroy this  target. ", game.RepromptMessage, information.SkillRequest.Session);
+                return ResponseCreator.Ask($"You have already assigned the required number of {crewName} crew to {threat.Name}. Try sending a different crew type on a mission to deal with this threat. ", game.RepromptMessage, information.SkillRequest.Session);
 
             // check if science was sent on a mission while cosmic existentialism is active
             if (crewDie.Type == CrewType.Science&& ship.ShipSystems["ScienceUnavailable"])

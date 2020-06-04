@@ -31,7 +31,7 @@ namespace DeepSpaceDSixAlexa.Intents
                 return ResponseCreator.Ask("This ship cannot recharge the shields. ", game.RepromptMessage, information.SkillRequest.Session);
             if (!ship.Crew.Any(c => c.Type == Enums.CrewType.Science && c.State == CrewState.Available))
                 return ResponseCreator.Ask($"We have no available science crew to recharge the shields. We have {ship.GetAvailableCrewAsString()}. ", game.RepromptMessage, information.SkillRequest.Session);
-            // TODO: Prevent shield recharges if science crew cannot be used, or if shields are offline  until a threat is destroyed
+            
             if(ship.ShipSystems["ScienceUnavailable"])
                 return ResponseCreator.Ask("Our science crew are having an existentialism crisis and are unavailable. Send a science crew on a mission to deal with cosmic existentialism to be able to use them again. ", game.RepromptMessage, information.SkillRequest.Session);
 
