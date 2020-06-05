@@ -49,7 +49,7 @@ namespace DeepSpaceDSixAlexa.Helpers
                     rule = "The crew in your ship is represented by six crew dice that you roll every time a new round starts. Here is a list of possible results: 1. Commander. 2. Tactical. 3. Medical. 4. Science. 5. Engineering. 6. Threat. Say next to continue.";
                     break;
                 case 10:
-                    rule = "Each crew member can do a unique action. The commander can transform another crew member to a different type. To do this, you use the transform keyword. For example, you can say transform tactical to medical. Say next to continue.";
+                    rule = "Each crew member can perform a unique action. The commander can transform another crew member to a different type. To do this, you use the transform keyword. For example, you can say transform tactical to medical. Say next to continue.";
                     break;
                 case 11:
                     rule = "The tactical crew member is used to operate your weapons systems. To use your tactical crew, you must first assign them to the weapons. For example, you can say, assign two tactical crew to the weapons. Say next to continue.";
@@ -61,13 +61,13 @@ namespace DeepSpaceDSixAlexa.Helpers
                     rule = "Keep in mind that the first tactical crew member that you assign to the weapons in a round gives you one damage to deal to the threats. All additional tactical crew give you two more damage to deal. For example, if you assign two tactical crew, you can deal up to three damage. If you assign three tactical crew, you can deal up to five damage. Say next to continue.";
                     break;
                 case 14:
-                    rule = "The medical crew can do two actions. The first one is heal crew which heals all the crew located in the infirmary. Sometimes your crew will be moved to the infirmary and you need to use your medical crew to treat them to be able to use them again. Say next to continue.";
+                    rule = "The medical crew can perform two actions. The first one is heal crew which heals all the crew located in the infirmary. Sometimes your crew will be moved to the infirmary and you need to use your medical crew to treat them to be able to use them again. Say next to continue.";
                     break;
                 case 15:
                     rule = "The second medical action is remove threat. This action removes a locked threat crew die from the scanners. The locked threat is then returned to your crew dice pool that will be rolled on the following round. Say next to continue.";
                     break;
                 case 16:
-                    rule = "The science crew can also do two actions. The first action is recharge shields which recharges your ship's shields to full power. Say next to continue.";
+                    rule = "The science crew can also perform two actions. The first action is recharge shields which recharges your ship's shields to full power. Say next to continue.";
                     break;
                 case 17:
                     rule = "The second science crew action is fire stasis beam. The stasis beam is used to temporarily disable the threats to your ship. When a threat is disabled, it cannot be activated in the current round. The stasis beam can be used on both external and internal threats. Say next to continue.";
