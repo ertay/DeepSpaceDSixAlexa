@@ -22,7 +22,7 @@ namespace DeepSpaceDSixAlexa.Intents
             // session ended save current session data to dynamo db
             var game = (Game)information.Context;
             await game.SaveDataToDb();
-            string message = "Thank you for playing Deep Space D6.";
+            string message = "Thank you for playing Deep Space Dice. I will be expecting your return, Captain. If you enjoyed playing Deep Space Dice, you should try Desolate. To launch Desolate, say Alexa, enable Desolate Board Game. ";
             return ResponseBuilder.Tell(message);
         }
     }

@@ -78,7 +78,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             }
             else
             {
-                RepeatMessage = "Welcome to Deep Space D6 Beta version 3! Say new game to begin. Say rules to learn how to play. Say about to get information about the game. ";
+                RepeatMessage = "Welcome to Deep Space Dice! Say new game to begin. Say rules to learn how to play. Say about to get information about the game. ";
                 Message = SoundFx.Intro + RepeatMessage;
                 RepromptMessage = "To start a new game, say new game. ";
                 GameState = GameState.MainMenu;
