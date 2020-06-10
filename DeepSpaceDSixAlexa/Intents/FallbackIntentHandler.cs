@@ -21,7 +21,7 @@ namespace DeepSpaceDSixAlexa.Intents
         {
             var game = (Game)information.Context;
             string message = "I'm sorry Captain, that is not a valid command. ";
-            return ResponseCreator.Ask(message + game.RepeatMessage, game.RepromptMessage, information.SkillRequest.Session);
+            return ResponseCreator.Ask(message, game.RepromptMessage, information.SkillRequest.Session);
         }
     }
 
@@ -32,8 +32,8 @@ namespace DeepSpaceDSixAlexa.Intents
         public override async Task<SkillResponse> Handle(AlexaRequestInformation<SkillRequest> information)
         {
             var game = (Game)information.Context;
-            string message = "I'm sorry Captain, that is not a valid command. ";
-            return ResponseCreator.Ask(message + game.RepeatMessage, game.RepromptMessage, information.SkillRequest.Session);
+            string message = "I'm sorry Captain, that is not a valid command. Say help if you need assistance. ";
+            return ResponseCreator.Ask(message, game.RepromptMessage, information.SkillRequest.Session);
         }
 
         
