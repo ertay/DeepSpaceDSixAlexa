@@ -22,7 +22,7 @@ namespace DeepSpaceDSixAlexa.Helpers
                     rule = "Great! Don't worry, this won't take long! You can say Next to proceed to the next step, back to go back to the previous step, and repeat if you want me to repeat the current rule. Say new game at any time to start a new game. Now, say next to continue.";
                     break;
                 case 1:
-                    rule = "You are the Captain of the USS Crypsis - a RPTR class starship on routine patrol of the Auborne system when a distress call was received. Upon warping in you quickly realize it was a trap! With the help of your crew, you must survive until a rescue fleet appears. Say next to continue.";
+                    rule = "You are the Captain of the USS Crypsis, a RPTR class starship on routine patrol of the Auborne system when a distress call was received. Upon warping in you quickly realize it was a trap! With the help of your crew, you must survive until a rescue fleet appears. Say next to continue.";
                     break;
                 case 2:
                     rule = "To win, you must survive by destroying all external threats in the threat deck. Say next to continue.";
