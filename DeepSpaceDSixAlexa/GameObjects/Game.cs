@@ -204,7 +204,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             bool victory =  ThreatManager.ThreatDeck.Count == 0 && ThreatManager.ExternalThreats.Count == 0;
             if(victory)
             {
-                Message += $"{SoundFx.Victory}Congratulations, captain! All external threats destroyed and there are no more threats in the threat deck. To start a new game, say new game. ";
+                Message += $"{SoundFx.VictoryBeeping}All external threats destroyed and there are no more threats in the threat deck! We have an incoming transmission from the Admiral. {SoundFx.VictoryMessage()} To start a new game, say new game. ";
                 RepromptMessage = "You are victorious! Say new game to play again. ";
                 RepeatMessage = Message;
             }

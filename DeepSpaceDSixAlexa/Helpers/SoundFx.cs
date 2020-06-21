@@ -14,7 +14,7 @@ namespace DeepSpaceDSixAlexa.Helpers
         public static string Intro = $"<audio src=\"{BASE_URL}pm-infected-03.mp3\"/>";
         public static string Beeping = $"<audio src=\"{BASE_URL}pm-csph-text-6.mp3\"/>";
         public static string Warp = $"<audio src=\"{BASE_URL}pm-fssf2-tonal-energy-risers-4.mp3\"/>";
-        public static string Victory = $"<audio src=\"{BASE_URL}pm-csph-calculations-20.mp3\"/>";
+        public static string VictoryBeeping = $"<audio src=\"{BASE_URL}pm-csph-calculations-20.mp3\"/>";
         public static string GameOver = $"<audio src=\"{BASE_URL}pm-sfm-impact-4.mp3\"/>";
         public const string Dice = "<audio src=\"soundbank://soundlibrary/toys_games/board_games/board_games_08\"/>";
         public static string ThreatRemoved = $"<audio src=\"{BASE_URL}u5BdjRcy-pm-fn-objects-items-interactions-menus-132.mp3\"/>";
@@ -78,6 +78,19 @@ namespace DeepSpaceDSixAlexa.Helpers
                 case 10:
                     return "<audio src=\"soundbank://soundlibrary/scifi/amzn_sfx_scifi_short_low_explosion_01\"/>";
                     
+            }
+            return string.Empty;
+        }
+
+        public static string VictoryMessage()
+        {
+            switch (ThreadSafeRandom.ThisThreadsRandom.Next(2))
+            {
+                case 0:
+                    return $"<audio src=\"{BASE_URL}win-rc.mp3\"/>";
+                case 1:
+                    return $"<audio src=\"{BASE_URL}win-bc.mp3\"/>";
+
             }
             return string.Empty;
         }
