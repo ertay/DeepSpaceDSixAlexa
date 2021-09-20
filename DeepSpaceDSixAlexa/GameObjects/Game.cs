@@ -45,7 +45,7 @@ namespace DeepSpaceDSixAlexa.GameObjects
             _session = session;
 
 
-            if (_session.Attributes == null)
+            if (_session.Attributes == null || session.Attributes.Count < 1)
             {
                 // new session, check dynamodb if we have any data for this user and load it if so
                 await LoadFromDb();

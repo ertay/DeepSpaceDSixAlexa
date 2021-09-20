@@ -35,7 +35,7 @@ namespace DeepSpaceDSixAlexa
             }
 
 
-            bool isFirstRequest = skillRequest.Session.Attributes == null ? true : false;
+            bool isFirstRequest = skillRequest.Session.Attributes.Count < 1 ? true : false;
             Game game = new Game();
             await game.InitializeGame(skillRequest.Session);
 
